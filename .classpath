@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="spring-boot-backend/src/main/java"/>
+	<classpathentry kind="src" path="spring-boot-backend - Copy/src/main/java"/>
+	<classpathentry kind="src" path="spring-boot-backend - Copy (2)/src/main/java"/>
+	<classpathentry kind="src" path="spring-boot-backend - Copy (3)/src/main/java"/>
+	<classpathentry kind="src" path="spring-boot-backend - Copy (4)/src/main/java"/>
+	<classpathentry kind="output" path="spring-boot-backend/target/classes"/>
+</classpath>

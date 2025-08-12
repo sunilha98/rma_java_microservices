@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api-gateway" />
+        <module name="resource-management-api (3)" />
+        <module name="resource-management-api (4)" />
+        <module name="eureka-server" />
+        <module name="resource-management-api (1)" />
+        <module name="master-resource-service" />
+        <module name="resource-management-api (2)" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="master-resource-service" options="-parameters" />
+      <module name="resource-management-api (1)" options="-parameters" />
+      <module name="resource-management-api (2)" options="-parameters" />
+      <module name="resource-management-api (3)" options="-parameters" />
+      <module name="resource-management-api (4)" options="-parameters" />
+    </option>
+  </component>
+</project>
