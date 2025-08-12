@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,15 @@ public class ActivityLogController {
 	@GetMapping("/recent")
 	public ResponseEntity<List<ActivityLog>> getRecentActivities() {
 		return ResponseEntity.ok(activityLogService.getRecentActivities());
+	}
+
+	@PostMapping
+	public ResponseEntity<ActivityLog> logActivity(ActivityLog activityLog) {
+		activityLogService.logActivity(activityLog.getAction(),
+				activityLog.getPerformedBy(),
+				activityLog.getRole(),
+				activityLog.getModule(),
+				activityLog.getDetails());
+		return ResponseEntity.ok(activityLog);
 	}
 }

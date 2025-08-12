@@ -2,6 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../api-gateway" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../rma_java_microservices_gateway/api-gateway" vcs="Git" />
   </component>
 </project>

@@ -16,4 +16,4 @@ public class UserMgmtApplication {
 	}
 }
 
-// logout needed, use template for activity tracking
+// logout needed

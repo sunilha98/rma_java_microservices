@@ -12,12 +12,10 @@
         <module name="user-mgmt-service" />
         <module name="master-resources" />
         <module name="reports-management" />
+        <module name="api-gateway" />
         <module name="eureka-server" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="api-gateway" target="17" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
