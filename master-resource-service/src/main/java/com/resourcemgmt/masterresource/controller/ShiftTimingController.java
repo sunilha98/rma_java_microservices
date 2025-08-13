@@ -2,6 +2,7 @@ package com.resourcemgmt.masterresource.controller;
 
 import java.util.List;
 
+import com.resourcemgmt.masterresource.activities.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class ShiftTimingController {
 
 	@PostMapping
 	@LogActivity(action = "Created Shift", module = "Shift Management")
-	public ResponseEntity<?> createShift(@RequestBody ShiftTimingDTO dto) {
+	public ResponseEntity<?> createShift(@RequestBody ShiftTimingDTO dto, @RequestHeader("X-Bearer-Token") String token) {
 		if (shiftRepo.existsByName(dto.getName())) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Shift already exists");
 		}
@@ -34,6 +35,7 @@ public class ShiftTimingController {
 
 		shiftRepo.save(shift);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Shift", shift.getName());
 
 		return ResponseEntity.ok("Shift created successfully");

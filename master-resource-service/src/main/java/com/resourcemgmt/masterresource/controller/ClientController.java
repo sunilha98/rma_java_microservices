@@ -1,5 +1,6 @@
 package com.resourcemgmt.masterresource.controller;
 
+import com.resourcemgmt.masterresource.activities.ActivityLogService;
 import com.resourcemgmt.masterresource.dto.ClientDTO;
 import com.resourcemgmt.masterresource.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,10 @@ public class ClientController {
 
 	@LogActivity(action = "Created Client", module = "Client Management")
 	@PostMapping
-	public ResponseEntity<String> createClient(@RequestBody ClientRequest request) {
+	public ResponseEntity<String> createClient(@RequestBody ClientRequest request, @RequestHeader("X-Bearer-Token") String token) {
 		clientService.createClient(request);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Client", request.getName());
 
 		return ResponseEntity.ok("Client created successfully");

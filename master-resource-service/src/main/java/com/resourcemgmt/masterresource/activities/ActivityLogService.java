@@ -16,6 +16,8 @@ public class ActivityLogService {
 	@Autowired
 	private ActivityLogRepository repository;
 
+	public static String TOKEN;
+
 	@Async("activityExecutor")
 	public void logActivity(String action, String performedBy, String role, String module, String details) {
 		ActivityLog log = new ActivityLog();

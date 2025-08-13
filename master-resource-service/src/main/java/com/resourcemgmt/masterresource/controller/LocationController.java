@@ -2,19 +2,13 @@ package com.resourcemgmt.masterresource.controller;
 
 import java.util.List;
 
+import com.resourcemgmt.masterresource.activities.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.masterresource.activities.ActivityContextHolder;
 import com.resourcemgmt.masterresource.activities.LogActivity;
@@ -35,12 +29,13 @@ public class LocationController {
 
 	@PostMapping
 	@LogActivity(action = "Created Location", module = "Location Management")
-	public Location createLocation(@RequestBody Location location) {
+	public Location createLocation(@RequestBody Location location, @RequestHeader("X-Bearer-Token") String token) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
 
 		Location resLocation = locationService.createLocation(location, username);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Location", resLocation.getName());
 
 		return resLocation;
@@ -55,20 +50,22 @@ public class LocationController {
 
 	@PutMapping("/{id}")
 	@LogActivity(action = "Updated Location", module = "Location Management")
-	public Location updateLocation(@PathVariable Long id, @RequestBody Location location) {
+	public Location updateLocation(@PathVariable Long id, @RequestBody Location location, @RequestHeader("X-Bearer-Token") String token) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
 
 		Location resLocation = locationService.updateLocation(id, location, username);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Location", resLocation.getName());
 		return resLocation;
 	}
 
 	@DeleteMapping("/{id}")
 	@LogActivity(action = "Deleted Location", module = "Location Management")
-	public ResponseEntity<?> deleteLocation(@PathVariable Long id) {
+	public ResponseEntity<?> deleteLocation(@PathVariable Long id, @RequestHeader("X-Bearer-Token") String token) {
 		locationService.deleteLocation(id);
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Location Id", id.toString());
 		return ResponseEntity.ok().build();
 	}
