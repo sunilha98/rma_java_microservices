@@ -3,6 +3,7 @@ package com.resourcemgmt.projectsowservice.controller;
 import java.util.List;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
+import com.resourcemgmt.projectsowservice.dto.reports.LessonsLearnedReportsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,5 +79,10 @@ public class LessonLearnedController {
 	@GetMapping("/project/{projectId}")
 	public ResponseEntity<List<LessonLearnedDTO>> getLessonsByProject(@PathVariable Long projectId) {
 		return ResponseEntity.ok(lessonService.getLessonsByProject(projectId));
+	}
+
+	@GetMapping("/getLessonsLearnedReports")
+	public ResponseEntity<List<LessonsLearnedReportsDTO>> getLessonsLearnedReports() {
+		return ResponseEntity.ok(lessonService.getLessonsLearnedReports());
 	}
 }

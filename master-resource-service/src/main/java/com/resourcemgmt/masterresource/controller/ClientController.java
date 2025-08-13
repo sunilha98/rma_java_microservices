@@ -11,6 +11,8 @@ import com.resourcemgmt.masterresource.activities.LogActivity;
 import com.resourcemgmt.masterresource.dto.ClientRequest;
 import com.resourcemgmt.masterresource.service.ClientService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
@@ -36,6 +38,11 @@ public class ClientController {
 	@GetMapping("/getByName/{name}")
 	public ResponseEntity<Client> getClientByName(@PathVariable String name) {
 		return ResponseEntity.ok(clientService.getClientByName(name));
+	}
+
+	@GetMapping
+	public ResponseEntity<List<Client>> getAllClients() {
+		return ResponseEntity.ok(clientService.getAllClients());
 	}
 
 }

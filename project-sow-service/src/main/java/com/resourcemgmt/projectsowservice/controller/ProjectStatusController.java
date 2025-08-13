@@ -3,6 +3,7 @@ package com.resourcemgmt.projectsowservice.controller;
 import java.util.List;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
+import com.resourcemgmt.projectsowservice.dto.reports.RiskIssueDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,4 +49,8 @@ public class ProjectStatusController {
 		return ResponseEntity.ok(service.getAllStatus());
 	}
 
+	@GetMapping("/getRisksAndIssuesReport")
+	public ResponseEntity<List<RiskIssueDTO>> getRisksAndIssuesReport() {
+		return ResponseEntity.ok(service.getRisksAndIssuesReport());
+	}
 }

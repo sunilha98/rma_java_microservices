@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.resourcemgmt.reports.reports.dto.BenchResourceDTO;
@@ -19,145 +24,162 @@ import com.resourcemgmt.reports.reports.dto.ProjectReportDTO;
 import com.resourcemgmt.reports.reports.dto.ResourceAllocationDTO;
 import com.resourcemgmt.reports.reports.dto.RiskIssueDTO;
 import com.resourcemgmt.reports.reports.dto.SpendTrackingDTO;
-import com.resourcemgmt.reports.repository.AllocationRepository;
-import com.resourcemgmt.reports.repository.LessonLearnedRepository;
-import com.resourcemgmt.reports.repository.ProjectRepository;
-import com.resourcemgmt.reports.repository.ProjectStatusUpdateRepository;
-import com.resourcemgmt.reports.repository.ResourceRepository;
-import com.resourcemgmt.reports.repository.SowRepository;
+
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
 public class ReportsService {
 
-	private final ProjectRepository projectRepository;
-	private final AllocationRepository allocationRepository;
-	private final ResourceRepository resourceRepository;
-	private final SowRepository sowRepository;
-	private final ProjectStatusUpdateRepository statusUpdateRepository;
-	private final LessonLearnedRepository lessonLearnedRepository;
+	@Autowired
+	private RestTemplate restTemplate;
 
-	public List<ProjectReportDTO> getInFlightProjects() {
-		return projectRepository
-				.findByStatus("IN_FLIGHT").stream().map(p -> new ProjectReportDTO(p.getId(), p.getName(),
-						p.getClient().getName(), p.getStatus(), p.getStartDate(), p.getEndDate()))
-				.collect(Collectors.toList());
+	public List<ProjectReportDTO> getInFlightProjects(String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/projects/status/IN_FLIGHT";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		return response.getBody();
 	}
 
-	public List<ProjectReportDTO> getProposedProjects() {
-		return projectRepository
-				.findByStatus("PROPOSED").stream().map(p -> new ProjectReportDTO(p.getId(), p.getName(),
-						p.getClient().getName(), p.getStatus(), p.getStartDate(), p.getEndDate()))
-				.collect(Collectors.toList());
+	public List<ProjectReportDTO> getProposedProjects(String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/projects/status/PROPOSED";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		return response.getBody();
 	}
 
-	public List<SpendTrackingDTO> getSpendTrackingReport() {
-		List<Project> projects = projectRepository.findByStatus("IN_FLIGHT");
+	public List<SpendTrackingDTO> getSpendTrackingReport(String token) {
 
-		return projects.stream().map(p -> {
-			BigDecimal planned = Optional.ofNullable(p.getBudget()).orElse(BigDecimal.ZERO);
-			BigDecimal actual = Optional.ofNullable(p.getActualCost()).orElse(BigDecimal.ZERO);
-			BigDecimal variance = actual.subtract(planned);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-			return new SpendTrackingDTO(p.getClient().getName(), p.getName(), planned.doubleValue(),
-					actual.doubleValue(), variance.doubleValue());
-		}).collect(Collectors.toList());
-	}
+		String url = "http://localhost:8080/api/projects/status/spend-tracking";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<Map<String, Object>> resList = response.getBody();
 
-	public List<RiskIssueDTO> getRisksAndIssuesReport() {
-		return statusUpdateRepository.findAllWithRisks().stream().map(r -> new RiskIssueDTO(r.getId(),
-				r.getProject().getName(), r.getRisks(), r.getIssues(), r.getProgress())).collect(Collectors.toList());
-	}
-
-	public List<ResourceAllocationDTO> getResourceAllocationReport() {
-		return allocationRepository.findAll().stream()
-			.map(a -> {
-				Resource resource = a.getResource();
-				String skillNames = resource.getSkillsets().stream()
-					.map(Skillset::getName)
-					.collect(Collectors.joining(", "));
-
-				return new ResourceAllocationDTO(
-					resource.getId(),
-					resource.getFirstName(),
-					resource.getLastName(),
-					resource.getTitle() != null ? resource.getTitle().getName() : null,
-					skillNames,
-					a.getProject() != null ? a.getProject().getName() : null,
-					a.getAllocationPercentage()
-				);
-			})
-			.collect(Collectors.toList());
-	}
-
-
-	public List<BenchResourceDTO> getBenchTrackingReport() {
-		List<Long> allocatedIds = allocationRepository.findAllAllocatedResourceIds();
-
-		return resourceRepository.findAll().stream()
-			.filter(r -> !allocatedIds.contains(r.getId()))
-			.map(r -> {
-				String skillNames = r.getSkillsets().stream()
-					.map(Skillset::getName)
-					.collect(Collectors.joining(", "));
-
-				return new BenchResourceDTO(
-					r.getId(),
-					r.getFirstName(),
-					r.getLastName(),
-					r.getTitle() != null ? r.getTitle().getName() : null,
-					skillNames,
-					true
-				);
-			})
-			.collect(Collectors.toList());
-	}
-
-
-	public List<ForecastingDTO> getForecastingReport() {
-		// Group SoWs by title and skill (assuming skill is part of description or
-		// another field)
-		Map<String, List<Sow>> groupedSows = sowRepository.findAll().stream()
-				.collect(Collectors.groupingBy(sow -> sow.getTitle(), 
-						Collectors.toList()));
-
-		List<ForecastingDTO> result = new ArrayList<>();
-
-		for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
-			String role = entry.getKey();
-			int demand = entry.getValue().size();
-
-			// Count available resources with matching title
-			int available = resourceRepository.countByTitleName(role);
-
-			result.add(new ForecastingDTO(role, "N/A", demand, available));
+		List<SpendTrackingDTO> result = new ArrayList<>();
+		for (Map<String, Object> resMap : resList) {
+			result.add(new SpendTrackingDTO(resMap.get("clientName").toString(), resMap.get("projectName").toString(), Double.parseDouble(resMap.get("planned").toString()),
+					Double.parseDouble(resMap.get("actual").toString()), Double.parseDouble(resMap.get("variance").toString())));
 		}
-
-		return result;
+		return  result;
 	}
 
-	public List<FinancialMetricDTO> getFinancialMetricsReport() {
-		return projectRepository.findAll().stream()
-				.map(p -> new FinancialMetricDTO(p.getId(), p.getName(), p.getBudget(),
-						p.getActualCost()))
-				.collect(Collectors.toList());
+	public List<RiskIssueDTO> getRisksAndIssuesReport(String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/project-status/getRisksAndIssuesReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<RiskIssueDTO> resList = response.getBody();
+		return resList;
 	}
 
-	public List<GovernanceDTO> getGovernanceReport() {
-		return sowRepository.findAll().stream().map(s -> new GovernanceDTO(s.getId(), s.getClient().getName(),
-				String.valueOf(s.getStatus()), s.getUpdatedAt())).collect(Collectors.toList());
+	public List<ResourceAllocationDTO> getResourceAllocationReport(String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/allocations/getResourceAllocationReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<ResourceAllocationDTO> resList = response.getBody();
+
+		return resList;
 	}
 
-	public List<PortfolioDTO> getPortfolioDashboard() {
-		return projectRepository.findAll().stream()
-				.map(p -> new PortfolioDTO(p.getClient().getName(), p.getPractice().getName(), p.getStatus()))
-				.collect(Collectors.toList());
+
+	public List<BenchResourceDTO> getBenchTrackingReport(String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/allocations/getBenchTrackingReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<BenchResourceDTO> resList = response.getBody();
+
+		return resList;
 	}
 
-	public List<LessonLearnedDTO> getLessonsLearnedRepository() {
-		return lessonLearnedRepository.findAll().stream().map(l -> new LessonLearnedDTO(l.getProject().getId(),
-				l.getProject().getName(), l.getDescription(), l.getCategory())).collect(Collectors.toList());
+
+//	public List<ForecastingDTO> getForecastingReport(String token) {
+//		Map<String, List<Sow>> groupedSows = sowRepository.findAll().stream()
+//				.collect(Collectors.groupingBy(sow -> sow.getTitle(),
+//						Collectors.toList()));
+//
+//		List<ForecastingDTO> result = new ArrayList<>();
+//
+//		for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
+//			String role = entry.getKey();
+//			int demand = entry.getValue().size();
+//
+//			// Count available resources with matching title
+//			int available = resourceRepository.countByTitleName(role);
+//
+//			result.add(new ForecastingDTO(role, "N/A", demand, available));
+//		}
+//
+//		return result;
+//	}
+
+	public List<FinancialMetricDTO> getFinancialMetricsReport(String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/projects/getFinancialMetricsReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<FinancialMetricDTO> resList = response.getBody();
+
+		return resList;
+	}
+
+	public List<GovernanceDTO> getGovernanceReport(String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/sows/getGovernanceReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<GovernanceDTO> resList = response.getBody();
+
+		return resList;
+	}
+
+	public List<PortfolioDTO> getPortfolioDashboard(String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/projects/getPortfolioReports";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<PortfolioDTO> resList = response.getBody();
+
+		return resList;
+	}
+
+	public List<LessonLearnedDTO> getLessonsLearnedRepository(String token) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/lessons/getLessonsLearnedReports";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<LessonLearnedDTO> resList = response.getBody();
+
+		return resList;
 	}
 }

@@ -1,6 +1,7 @@
 package com.resourcemgmt.projectsowservice.service;
 
 import com.resourcemgmt.projectsowservice.dto.SowUploadRequest;
+import com.resourcemgmt.projectsowservice.dto.reports.GovernanceDTO;
 import com.resourcemgmt.projectsowservice.entity.Project;
 import com.resourcemgmt.projectsowservice.entity.Sow;
 import com.resourcemgmt.projectsowservice.entity.Sow.Priority;
@@ -9,7 +10,12 @@ import com.resourcemgmt.projectsowservice.repository.PracticeRepository;
 import com.resourcemgmt.projectsowservice.repository.ProjectRepository;
 import com.resourcemgmt.projectsowservice.repository.SowRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -17,7 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SowService {
@@ -29,6 +36,9 @@ public class SowService {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     SowService(PracticeRepository practiceRepository) {
         this.practiceRepository = practiceRepository;
@@ -65,5 +75,28 @@ public class SowService {
         Files.createDirectories(path.getParent());
         Files.write(path, file.getBytes());
         return path.toString();
+    }
+
+    public List<GovernanceDTO> getGovernanceReport(String token) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://localhost:8080/api/clients";
+        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        List<Map<String, Object>> allClients = response.getBody();
+
+        Map<Long, String> clientMap = new HashMap<>();
+        allClients.forEach(m -> {
+            Long clientId = Long.valueOf(m.get("id").toString());
+            String clientName = Objects.toString(m.get("name"), "");
+            clientMap.put(clientId, clientName);
+        });
+
+        List<GovernanceDTO> governanceDTOS =  sowRepository.findAll().stream().map(s -> new GovernanceDTO(s.getId(), clientMap.get(s.getClientId()),
+                String.valueOf(s.getStatus()), s.getUpdatedAt())).collect(Collectors.toList());
+
+        return governanceDTOS;
     }
 }

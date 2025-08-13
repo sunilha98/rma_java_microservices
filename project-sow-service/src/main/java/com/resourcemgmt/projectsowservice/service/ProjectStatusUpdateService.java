@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.resourcemgmt.projectsowservice.dto.reports.RiskIssueDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,4 +68,9 @@ public class ProjectStatusUpdateService {
 	public List<ProjectStatusUpdateDTO> getAllStatus() {
 		return statusRepo.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
 	}
+
+    public List<RiskIssueDTO> getRisksAndIssuesReport() {
+		return statusRepo.findAllWithRisks().stream().map(r -> new RiskIssueDTO(r.getId(),
+				r.getProject().getName(), r.getRisks(), r.getIssues(), r.getProgress())).collect(Collectors.toList());
+    }
 }

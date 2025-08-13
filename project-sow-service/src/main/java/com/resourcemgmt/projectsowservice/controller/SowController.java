@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
+import com.resourcemgmt.projectsowservice.dto.reports.GovernanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -63,5 +64,11 @@ public class SowController {
 		ActivityContextHolder.setDetail("Project", projectName);
 
 		return ResponseEntity.ok("SoW and Project created successfully!");
+	}
+
+	@GetMapping("/getGovernanceReport")
+	public ResponseEntity<List<GovernanceDTO>> getGovernanceReport(@RequestHeader("X-Bearer-Token") String token) {
+
+		return ResponseEntity.ok(sowService.getGovernanceReport(token));
 	}
 }

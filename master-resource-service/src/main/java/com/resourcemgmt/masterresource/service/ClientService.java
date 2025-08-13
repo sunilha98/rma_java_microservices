@@ -1,6 +1,7 @@
 package com.resourcemgmt.masterresource.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.resourcemgmt.masterresource.dto.ClientDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,9 @@ public class ClientService {
 	public Client getClientByName(String name) {
 		return clientRepository.findByName(name)
 				.orElseThrow(() -> new RuntimeException("Client not found with name: " + name));
+	}
+
+	public List<Client> getAllClients() {
+		return clientRepository.findAll();
 	}
 }

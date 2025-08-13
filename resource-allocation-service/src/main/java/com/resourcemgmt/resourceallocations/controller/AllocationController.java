@@ -4,9 +4,12 @@ import com.resourcemgmt.resourceallocations.activities.ActivityContextHolder;
 import com.resourcemgmt.resourceallocations.activities.ActivityLogService;
 import com.resourcemgmt.resourceallocations.activities.LogActivity;
 import com.resourcemgmt.resourceallocations.dto.AllocationDTO;
+import com.resourcemgmt.resourceallocations.dto.reports.BenchResourceDTO;
+import com.resourcemgmt.resourceallocations.dto.reports.ResourceAllocationDTO;
 import com.resourcemgmt.resourceallocations.entity.Allocation;
 import com.resourcemgmt.resourceallocations.entity.Resource;
 import com.resourcemgmt.resourceallocations.entity.Resource.BenchStatus;
+import com.resourcemgmt.resourceallocations.entity.Skillset;
 import com.resourcemgmt.resourceallocations.repository.AllocationRepository;
 import com.resourcemgmt.resourceallocations.repository.ResourceRepository;
 import com.resourcemgmt.resourceallocations.repository.TitleRepository;
@@ -21,7 +24,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/allocations")
@@ -120,5 +125,68 @@ public class AllocationController {
             allocation.setStatus(allocationDetails.getStatus());
             return ResponseEntity.ok(allocationRepository.save(allocation));
         }).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/getResourceAllocationReport")
+    public ResponseEntity<List<ResourceAllocationDTO>> getResourceAllocationReport(@RequestHeader("X-Bearer-Token") String token) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://localhost:8080/api/projects";
+        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        List<Map<String, Object>> resList = response.getBody();
+        Map<Long, String> projectMap = resList.stream()
+                .collect(Collectors.toMap(
+                        m -> Long.valueOf(m.get("id").toString()),
+                        m -> Objects.toString(m.get("name"), "")
+                ));
+
+        List<ResourceAllocationDTO> report = allocationRepository.findAll().stream()
+                .map(a -> {
+                    Resource resource = a.getResource();
+                    String skillNames = resource.getSkillsets().stream()
+                            .map(Skillset::getName)
+                            .collect(Collectors.joining(", "));
+
+                    return new ResourceAllocationDTO(
+                            resource.getId(),
+                            resource.getFirstName(),
+                            resource.getLastName(),
+                            resource.getTitle() != null ? resource.getTitle().getName() : null,
+                            skillNames,
+                            a.getProjectId() != null ? projectMap.get(a.getProjectId()) : null,
+                            a.getAllocationPercentage()
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/getBenchTrackingReport")
+    public ResponseEntity<List<BenchResourceDTO>> getBenchTrackingReport() {
+        List<Long> allocatedIds = allocationRepository.findAllAllocatedResourceIds();
+
+        List<BenchResourceDTO> benchResources = resourceRepository.findAll().stream()
+                .filter(r -> !allocatedIds.contains(r.getId()))
+                .map(r -> {
+                    String skillNames = r.getSkillsets().stream()
+                            .map(Skillset::getName)
+                            .collect(Collectors.joining(", "));
+
+                    return new BenchResourceDTO(
+                            r.getId(),
+                            r.getFirstName(),
+                            r.getLastName(),
+                            r.getTitle() != null ? r.getTitle().getName() : null,
+                            skillNames,
+                            true
+                    );
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(benchResources);
     }
 }

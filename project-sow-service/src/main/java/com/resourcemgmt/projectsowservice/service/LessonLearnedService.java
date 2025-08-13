@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.resourcemgmt.projectsowservice.dto.reports.LessonsLearnedReportsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -87,4 +88,10 @@ public class LessonLearnedService {
 	public List<LessonLearnedDTO> getAllLessons() {
 		return repository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
 	}
+
+    public List<LessonsLearnedReportsDTO> getLessonsLearnedReports() {
+		List<LessonsLearnedReportsDTO> dtos = repository.findAll().stream().map(l -> new LessonsLearnedReportsDTO(l.getProject().getId(),
+				l.getProject().getName(), l.getDescription(), l.getCategory())).collect(Collectors.toList());
+		return dtos;
+    }
 }
