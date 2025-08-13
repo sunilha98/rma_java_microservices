@@ -1,122 +1,124 @@
 package com.resourcemgmt.resourceallocations.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.resourcemgmt.resourceallocations.activities.ActivityContextHolder;
+import com.resourcemgmt.resourceallocations.activities.ActivityLogService;
 import com.resourcemgmt.resourceallocations.activities.LogActivity;
 import com.resourcemgmt.resourceallocations.dto.AllocationDTO;
 import com.resourcemgmt.resourceallocations.entity.Allocation;
 import com.resourcemgmt.resourceallocations.entity.Resource;
 import com.resourcemgmt.resourceallocations.entity.Resource.BenchStatus;
 import com.resourcemgmt.resourceallocations.repository.AllocationRepository;
-import com.resourcemgmt.resourceallocations.repository.ProjectRepository;
 import com.resourcemgmt.resourceallocations.repository.ResourceRepository;
 import com.resourcemgmt.resourceallocations.repository.TitleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/allocations")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class AllocationController {
 
-	private final ResourceRepository resourceRepository;
+    private final ResourceRepository resourceRepository;
 
-	private final TitleRepository titleRepository;
+    private final TitleRepository titleRepository;
 
-	private final ProjectRepository projectRepository;
+    private final RestTemplate restTemplate;
 
-	@Autowired
-	private AllocationRepository allocationRepository;
+    @Autowired
+    private AllocationRepository allocationRepository;
 
-	AllocationController(ProjectRepository projectRepository, TitleRepository titleRepository,
-			ResourceRepository resourceRepository) {
-		this.projectRepository = projectRepository;
-		this.titleRepository = titleRepository;
-		this.resourceRepository = resourceRepository;
-	}
+    AllocationController(TitleRepository titleRepository,
+                         ResourceRepository resourceRepository, RestTemplate restTemplate) {
+        this.titleRepository = titleRepository;
+        this.resourceRepository = resourceRepository;
+        this.restTemplate = restTemplate;
+    }
 
-	@GetMapping
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT') or hasRole('PROJECT_MANAGER')")
-	public ResponseEntity<List<Allocation>> getAllAllocations() {
-		List<Allocation> allocations = allocationRepository.findAll();
-		return ResponseEntity.ok(allocations);
-	}
+    @GetMapping
+    public ResponseEntity<List<Allocation>> getAllAllocations() {
+        List<Allocation> allocations = allocationRepository.findAll();
+        return ResponseEntity.ok(allocations);
+    }
 
-	@GetMapping("/project/{projectId}")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT') or hasRole('PROJECT_MANAGER')")
-	public ResponseEntity<List<Allocation>> getAllocationsByProject(@PathVariable Long projectId) {
-		List<Allocation> allocations = allocationRepository.findByProjectId(projectId);
-		return ResponseEntity.ok(allocations);
-	}
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<Allocation>> getAllocationsByProject(@PathVariable Long projectId) {
+        List<Allocation> allocations = allocationRepository.findByProjectId(projectId);
+        return ResponseEntity.ok(allocations);
+    }
 
-	@GetMapping("/resource/{resourceId}")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT')")
-	public ResponseEntity<List<Allocation>> getAllocationsByResource(@PathVariable Long resourceId) {
-		List<Allocation> allocations = allocationRepository.findByResourceId(resourceId);
-		return ResponseEntity.ok(allocations);
-	}
+    @GetMapping("/resource/{resourceId}")
+    public ResponseEntity<List<Allocation>> getAllocationsByResource(@PathVariable Long resourceId) {
+        List<Allocation> allocations = allocationRepository.findByResourceId(resourceId);
+        return ResponseEntity.ok(allocations);
+    }
 
-	@PostMapping
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT')")
-	@LogActivity(action = "Created Allocation", module = "Allocation Management")
-	public ResponseEntity<Allocation> createAllocation(@RequestBody AllocationDTO allocationDTO) {
+    @PostMapping
+    @LogActivity(action = "Created Allocation", module = "Allocation Management")
+    public ResponseEntity<Allocation> createAllocation(@RequestBody AllocationDTO allocationDTO, @RequestHeader("X-Bearer-Token") String token) {
 
-		Allocation allocation = new Allocation();
-		Optional<Resource> resourceOptional = resourceRepository.findById(allocationDTO.getResourceId());
-		Resource resource = resourceOptional.get();
+        Allocation allocation = new Allocation();
+        Optional<Resource> resourceOptional = resourceRepository.findById(allocationDTO.getResourceId());
+        Resource resource = resourceOptional.get();
 
-		allocation.setProject(projectRepository.findByProjectCode(allocationDTO.getProjectCode()));
-		allocation.setTitle(titleRepository.findByName(allocationDTO.getRole()));
-		allocation.setResource(resource);
+        allocation.setProjectId(allocationDTO.getProjectId());
+        allocation.setTitle(titleRepository.findByName(allocationDTO.getRole()));
+        allocation.setResource(resource);
 
-		allocation.setAllocationPercentage(allocationDTO.getAllocationPercent());
-		allocation.setStartDate(allocationDTO.getStartDate());
-		allocation.setEndDate(allocationDTO.getEndDate());
+        allocation.setAllocationPercentage(allocationDTO.getAllocationPercent());
+        allocation.setStartDate(allocationDTO.getStartDate());
+        allocation.setEndDate(allocationDTO.getEndDate());
 
-		Allocation savedAllocation = allocationRepository.save(allocation);
+        Allocation savedAllocation = allocationRepository.save(allocation);
 
-		int prevPercent = resource.getAllocationPercentage();
-		int currentPercent = allocationDTO.getAllocationPercent();
-		int totalPercent = prevPercent + currentPercent;
+        int prevPercent = Optional.ofNullable(resource.getAllocationPercentage())
+                .orElse(0);
+        int currentPercent = Optional.ofNullable(allocationDTO.getAllocationPercent()).orElse(0);
+        int totalPercent = prevPercent + currentPercent;
 
-		if (totalPercent < 100) {
-			resource.setBenchStatus(BenchStatus.AVAILABLE);
-		} else {
-			resource.setBenchStatus(BenchStatus.ALLOCATED);
-		}
-		resource.setAllocationPercentage(totalPercent);
-		resourceRepository.saveAndFlush(resource);
+        if (totalPercent < 100) {
+            resource.setBenchStatus(BenchStatus.AVAILABLE);
+        } else {
+            resource.setBenchStatus(BenchStatus.ALLOCATED);
+        }
+        resource.setAllocationPercentage(totalPercent);
+        resourceRepository.saveAndFlush(resource);
 
-		ActivityContextHolder.setDetail("Project", savedAllocation.getProject().getName());
-		ActivityContextHolder.setDetail("Resource",
-				savedAllocation.getResource().getFirstName() + " " + savedAllocation.getResource().getLastName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		return ResponseEntity.ok(savedAllocation);
-	}
+        String url = "http://localhost:8080/api/projects/" + allocationDTO.getProjectId();
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        String projectName = response.getBody().get("name").toString();
 
-	@PutMapping("/{id}")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT')")
-	@LogActivity(action = "Updated Allocation", module = "Allocation Management")
-	public ResponseEntity<Allocation> updateAllocation(@PathVariable Long id,
-			@RequestBody Allocation allocationDetails) {
-		return allocationRepository.findById(id).map(allocation -> {
-			allocation.setAllocationPercentage(allocationDetails.getAllocationPercentage());
-			allocation.setStartDate(allocationDetails.getStartDate());
-			allocation.setEndDate(allocationDetails.getEndDate());
-			allocation.setStatus(allocationDetails.getStatus());
-			return ResponseEntity.ok(allocationRepository.save(allocation));
-		}).orElse(ResponseEntity.notFound().build());
-	}
+        ActivityLogService.TOKEN = token;
+        ActivityContextHolder.setDetail("Project", projectName);
+        ActivityContextHolder.setDetail("Resource",
+                savedAllocation.getResource().getFirstName() + " " + savedAllocation.getResource().getLastName());
+
+        return ResponseEntity.ok(savedAllocation);
+    }
+
+    @PutMapping("/{id}")
+    @LogActivity(action = "Updated Allocation", module = "Allocation Management")
+    public ResponseEntity<Allocation> updateAllocation(@PathVariable Long id,
+                                                       @RequestBody Allocation allocationDetails, @RequestHeader("X-Bearer-Token") String token) {
+        ActivityLogService.TOKEN = token;
+        return allocationRepository.findById(id).map(allocation -> {
+            allocation.setAllocationPercentage(allocationDetails.getAllocationPercentage());
+            allocation.setStartDate(allocationDetails.getStartDate());
+            allocation.setEndDate(allocationDetails.getEndDate());
+            allocation.setStatus(allocationDetails.getStatus());
+            return ResponseEntity.ok(allocationRepository.save(allocation));
+        }).orElse(ResponseEntity.notFound().build());
+    }
 }

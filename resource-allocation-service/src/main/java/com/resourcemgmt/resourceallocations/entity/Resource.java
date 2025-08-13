@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,6 +30,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "resources")
 @EntityListeners(AuditingEntityListener.class)
@@ -58,14 +64,9 @@ public class Resource {
 	@JsonIgnore
 	private Title title;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "location_id")
-	@JsonIgnore
-	private Location location;
+	private Long locationId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "practice_id")
-	private Practice practice;
+	private Long practiceId;
 
 	@Column(precision = 3, scale = 1)
 	private BigDecimal experience;
@@ -91,130 +92,6 @@ public class Resource {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
-	// Constructors
-	public Resource() {
-	}
-
-	// Getters and Setters
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
-	public void setEmployeeId(String employeeId) {
-		this.employeeId = employeeId;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Title getTitle() {
-		return title;
-	}
-
-	public void setTitle(Title title) {
-		this.title = title;
-	}
-
-	public Location getLocation() {
-		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-
-	public Practice getPractice() {
-		return practice;
-	}
-
-	public void setPractice(Practice practice) {
-		this.practice = practice;
-	}
-
-	public BigDecimal getExperience() {
-		return experience;
-	}
-
-	public void setExperience(BigDecimal experience) {
-		this.experience = experience;
-	}
-
-	public List<Skillset> getSkillsets() {
-		return skillsets;
-	}
-
-	public void setSkillsets(List<Skillset> skillsets) {
-		this.skillsets = skillsets;
-	}
-
-	public Integer getAllocationPercentage() {
-		return allocationPercentage;
-	}
-
-	public void setAllocationPercentage(Integer allocationPercentage) {
-		this.allocationPercentage = allocationPercentage;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public BenchStatus getBenchStatus() {
-		return benchStatus;
-	}
-
-	public void setBenchStatus(BenchStatus benchStatus) {
-		this.benchStatus = benchStatus;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 
 	public enum BenchStatus {
 		AVAILABLE, ALLOCATED, ON_LEAVE

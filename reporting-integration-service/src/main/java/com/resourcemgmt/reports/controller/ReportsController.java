@@ -23,7 +23,6 @@ import com.resourcemgmt.reports.service.ReportsService;
 
 @RestController
 @RequestMapping("/reports")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ReportsController {
 
 	@Autowired

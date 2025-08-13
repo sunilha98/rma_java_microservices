@@ -2,17 +2,13 @@ package com.resourcemgmt.projectsowservice.controller;
 
 import java.util.List;
 
+import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityContextHolder;
 import com.resourcemgmt.projectsowservice.activities.LogActivity;
@@ -31,10 +27,11 @@ public class ProjectStatusController {
 	@PostMapping
 	@LogActivity(action = "Added Project Status", module = "Project Status Management")
 	public ResponseEntity<ProjectStatusUpdateDTO> createStatus(@RequestBody @Valid ProjectStatusUpdateDTO dto,
-			@AuthenticationPrincipal UserDetails user) {
-		dto.setUpdatedBy(user.getUsername());
+			@RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) {
+		dto.setUpdatedBy(userName);
 		ProjectStatusUpdateDTO projectStatusResDto = service.createStatus(dto);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Project Code", projectStatusResDto.getProjectCode());
 		ActivityContextHolder.setDetail("Status", projectStatusResDto.getStatus());
 

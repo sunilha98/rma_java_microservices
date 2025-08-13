@@ -5,11 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.masterresource.activities.ActivityContextHolder;
 import com.resourcemgmt.masterresource.activities.LogActivity;
@@ -41,6 +37,13 @@ public class ShiftTimingController {
 		ActivityContextHolder.setDetail("Shift", shift.getName());
 
 		return ResponseEntity.ok("Shift created successfully");
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ShiftTiming> getShiftById(@PathVariable Long id) {
+		return shiftRepo.findById(id)
+				.map(shift -> ResponseEntity.ok().body(shift))
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@GetMapping

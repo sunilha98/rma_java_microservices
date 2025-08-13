@@ -1,19 +1,18 @@
 package com.resourcemgmt.projectsowservice.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityContextHolder;
 import com.resourcemgmt.projectsowservice.activities.LogActivity;
@@ -23,25 +22,40 @@ import com.resourcemgmt.projectsowservice.repository.ProjectRepository;
 
 @RestController
 @RequestMapping("/projects")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class ProjectController {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	@GetMapping
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT') or hasRole('PROJECT_MANAGER')")
-	public ResponseEntity<List<ProjectsDTO>> getAllProjects() {
+	public ResponseEntity<List<ProjectsDTO>> getAllProjects(@RequestHeader("X-Bearer-Token") String token) {
 		List<Project> projects = projectRepository.findAllOrderByCreatedAtDesc();
-		return ResponseEntity.ok(projects.stream().map(this::mapToSummaryDTO).collect(Collectors.toList()));
+
+		ActivityLogService.TOKEN = token;
+		List<ProjectsDTO> projectDTOs = projects.stream()
+				.map(project -> mapToSummaryDTO(project, token))
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(projectDTOs);
 	}
 
-	private ProjectsDTO mapToSummaryDTO(Project project) {
+	private ProjectsDTO mapToSummaryDTO(Project project, String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/clients/"+project.getClientId();
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        String clientName= response.getBody().get("name").toString();
+		
 		ProjectsDTO dto = new ProjectsDTO();
 		dto.setId(project.getId());
 		dto.setProjectCode(project.getProjectCode());
 		dto.setName(project.getName());
-		dto.setClientName(project.getClient().getName());
+		dto.setClientName(clientName);
 		dto.setPractice(project.getPractice().getName());
 		dto.setStatus(project.getStatus());
 		dto.setStartDate(project.getStartDate());
@@ -50,7 +64,6 @@ public class ProjectController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT') or hasRole('PROJECT_MANAGER')")
 	public ResponseEntity<Project> getProjectById(@PathVariable Long id) {
 		return projectRepository.findById(id).map(project -> ResponseEntity.ok().body(project))
 				.orElse(ResponseEntity.notFound().build());
@@ -58,11 +71,11 @@ public class ProjectController {
 
 	@PostMapping
 	@LogActivity(action = "Created Project", module = "Project Management")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT')")
-	public ResponseEntity<Project> createProject(@RequestBody Project project) {
+	public ResponseEntity<Project> createProject(@RequestBody Project project, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) {
 		project.setStatus("PROPOSED");
 		Project savedProject = projectRepository.save(project);
 
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Project", savedProject.getName());
 
 		return ResponseEntity.ok(savedProject);
@@ -70,8 +83,8 @@ public class ProjectController {
 
 	@PutMapping("/{id}")
 	@LogActivity(action = "Updated Project", module = "Project Management")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT') or hasRole('PROJECT_MANAGER')")
-	public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project projectDetails) {
+	public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project projectDetails, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) {
+		ActivityLogService.TOKEN = token;
 		return projectRepository.findById(id).map(project -> {
 			project.setName(projectDetails.getName());
 			project.setDescription(projectDetails.getDescription());
@@ -82,5 +95,10 @@ public class ProjectController {
 			project.setProgress(projectDetails.getProgress());
 			return ResponseEntity.ok(projectRepository.save(project));
 		}).orElse(ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/countActiveProjects")
+	public Long countActiveProjects() {
+		return projectRepository.countActiveProjects();
 	}
 }

@@ -1,11 +1,10 @@
 package com.resourcemgmt.masterresource.controller;
 
+import com.resourcemgmt.masterresource.dto.ClientDTO;
+import com.resourcemgmt.masterresource.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.masterresource.activities.ActivityContextHolder;
 import com.resourcemgmt.masterresource.activities.LogActivity;
@@ -27,6 +26,16 @@ public class ClientController {
 		ActivityContextHolder.setDetail("Client", request.getName());
 
 		return ResponseEntity.ok("Client created successfully");
+	}
+
+	@GetMapping("/{clientId}")
+	public ResponseEntity<ClientDTO> getClientById(@PathVariable Long clientId) {
+		return ResponseEntity.ok(clientService.getClientById(clientId));
+	}
+
+	@GetMapping("/getByName/{name}")
+	public ResponseEntity<Client> getClientByName(@PathVariable String name) {
+		return ResponseEntity.ok(clientService.getClientByName(name));
 	}
 
 }

@@ -22,21 +22,19 @@ import com.resourcemgmt.masterresource.entity.Location;
 import com.resourcemgmt.masterresource.service.LocationService;
 
 @RestController
-@RequestMapping("/masters/locations")
+@RequestMapping("/locations")
 public class LocationController {
 
 	@Autowired
 	private LocationService locationService;
 
 	@GetMapping
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('RMT')")
 	public List<Location> getAllLocations() {
 		return locationService.getAllLocations();
 	}
 
 	@PostMapping
 	@LogActivity(action = "Created Location", module = "Location Management")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
 	public Location createLocation(@RequestBody Location location) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
@@ -48,9 +46,15 @@ public class LocationController {
 		return resLocation;
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<Location> getLocationById(@PathVariable Long id) {
+		return locationService.getLocationById(id)
+				.map(location -> ResponseEntity.ok().body(location))
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	@PutMapping("/{id}")
 	@LogActivity(action = "Updated Location", module = "Location Management")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
 	public Location updateLocation(@PathVariable Long id, @RequestBody Location location) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
@@ -63,7 +67,6 @@ public class LocationController {
 
 	@DeleteMapping("/{id}")
 	@LogActivity(action = "Deleted Location", module = "Location Management")
-	@PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
 	public ResponseEntity<?> deleteLocation(@PathVariable Long id) {
 		locationService.deleteLocation(id);
 		ActivityContextHolder.setDetail("Location Id", id.toString());

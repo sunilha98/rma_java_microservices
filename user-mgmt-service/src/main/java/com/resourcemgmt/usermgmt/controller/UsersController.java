@@ -17,30 +17,28 @@ import java.util.List;
 @RequestMapping("/users")
 public class UsersController {
 
+    public static String TOKEN;
+
     @Autowired
     private UsersService userService;
 
     @GetMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @PostMapping
     @LogActivity(action = "Created user", module = "User Management")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
-    public User createUser(@RequestBody User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String createdBy = authentication.getName();
+    public User createUser(@RequestBody User user, @RequestHeader("X-Auth-Username") String createdBy, @RequestHeader("X-Bearer-Token") String token) {
 
         User resUser = userService.createUser(user, createdBy);
 
+        TOKEN = token;
         ActivityContextHolder.setDetail("User", resUser.getFirstName() + " " + resUser.getLastName());
 
         return resUser;
@@ -48,12 +46,11 @@ public class UsersController {
 
     @PutMapping("/{id}")
     @LogActivity(action = "Updated user", module = "User Management")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String updatedBy = authentication.getName();
+    public User updateUser(@PathVariable Long id, @RequestBody User user, @RequestHeader("X-Auth-Username") String updatedBy, @RequestHeader("X-Bearer-Token") String token) {
+
         User resUser = userService.updateUser(id, user, updatedBy);
 
+        TOKEN = token;
         ActivityContextHolder.setDetail("User", resUser.getFirstName() + " " + resUser.getLastName());
 
         return resUser;
@@ -61,10 +58,10 @@ public class UsersController {
 
     @DeleteMapping("/{id}")
     @LogActivity(action = "Deleted user", module = "User Management")
-    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('PROJECT_MANAGER')")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id, @RequestHeader("X-Bearer-Token") String token) {
         userService.deleteUser(id);
 
+        TOKEN = token;
         ActivityContextHolder.setDetail("User Id", id.toString());
         return ResponseEntity.ok().build();
     }

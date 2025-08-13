@@ -3,7 +3,7 @@ spring:
     name: resource-allocation-service
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/resource_management
+    url: jdbc:postgresql://localhost:5432/resource_allocation_db
     username: postgres
     password: root
     driver-class-name: org.postgresql.Driver

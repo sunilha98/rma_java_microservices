@@ -2,6 +2,9 @@ package com.resourcemgmt.resourceallocations.entity;
 
 import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -21,6 +24,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "allocations")
 @EntityListeners(AuditingEntityListener.class)
@@ -30,9 +36,7 @@ public class Allocation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "project_id")
-	private Project project;
+	private Long projectId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "resource_id")
@@ -55,13 +59,9 @@ public class Allocation {
 	@Enumerated(EnumType.STRING)
 	private AllocationStatus status = AllocationStatus.ACTIVE;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "requested_by")
-	private User requestedBy;
+	private Long requestedUserId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "approved_by")
-	private User approvedBy;
+	private Long approvedUserId;
 
 	@Column(name = "approved_at")
 	private LocalDateTime approvedAt;
@@ -73,115 +73,6 @@ public class Allocation {
 	@LastModifiedDate
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-
-	// Constructors
-	public Allocation() {
-	}
-
-	// Getters and Setters
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
-	}
-
-	public Resource getResource() {
-		return resource;
-	}
-
-	public void setResource(Resource resource) {
-		this.resource = resource;
-	}
-
-	public Title getTitle() {
-		return title;
-	}
-
-	public void setTitle(Title title) {
-		this.title = title;
-	}
-
-	public Integer getAllocationPercentage() {
-		return allocationPercentage;
-	}
-
-	public void setAllocationPercentage(Integer allocationPercentage) {
-		this.allocationPercentage = allocationPercentage;
-	}
-
-	public LocalDateTime getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(LocalDateTime startDate) {
-		this.startDate = startDate;
-	}
-
-	public LocalDateTime getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDateTime endDate) {
-		this.endDate = endDate;
-	}
-
-	public AllocationStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(AllocationStatus status) {
-		this.status = status;
-	}
-
-	public User getRequestedBy() {
-		return requestedBy;
-	}
-
-	public void setRequestedBy(User requestedBy) {
-		this.requestedBy = requestedBy;
-	}
-
-	public User getApprovedBy() {
-		return approvedBy;
-	}
-
-	public void setApprovedBy(User approvedBy) {
-		this.approvedBy = approvedBy;
-	}
-
-	public LocalDateTime getApprovedAt() {
-		return approvedAt;
-	}
-
-	public void setApprovedAt(LocalDateTime approvedAt) {
-		this.approvedAt = approvedAt;
-	}
-
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 
 	public enum AllocationStatus {
 		ACTIVE, COMPLETED, CANCELLED

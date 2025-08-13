@@ -32,9 +32,7 @@ public class FulfillmentRequest {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private UUID id;
 
-	@ManyToOne
-	@JoinColumn(name = "project_id")
-	private Project project;
+	private Long projectId;
 
 	@ManyToOne
 	@JoinColumn(name = "title_id")
@@ -44,9 +42,7 @@ public class FulfillmentRequest {
 	@JoinTable(name = "fulfillment_skillsets", joinColumns = @JoinColumn(name = "fulfillment_id"), inverseJoinColumns = @JoinColumn(name = "skillset_id"))
 	private List<Skillset> skillsets;
 
-	@ManyToOne
-	@JoinColumn(name = "location_id")
-	private Location location;
+	private Long locationId;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
@@ -62,9 +58,7 @@ public class FulfillmentRequest {
 	@LastModifiedDate
 	private LocalDateTime updatedAt;
 
-	@ManyToOne
-	@JoinColumn(name = "shift_id", nullable = false)
-	private ShiftTiming shift;
+	private Long shiftId;
 
 	@Column(nullable = false, precision = 3, scale = 1)
 	private BigDecimal experience;

@@ -9,10 +9,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.resourcemgmt.reports.entity.Project;
-import com.resourcemgmt.reports.entity.Resource;
-import com.resourcemgmt.reports.entity.Skillset;
-import com.resourcemgmt.reports.entity.Sow;
 import com.resourcemgmt.reports.reports.dto.BenchResourceDTO;
 import com.resourcemgmt.reports.reports.dto.FinancialMetricDTO;
 import com.resourcemgmt.reports.reports.dto.ForecastingDTO;

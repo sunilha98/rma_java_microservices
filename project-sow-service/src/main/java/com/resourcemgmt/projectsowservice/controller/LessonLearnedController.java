@@ -2,21 +2,14 @@ package com.resourcemgmt.projectsowservice.controller;
 
 import java.util.List;
 
+import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityContextHolder;
 import com.resourcemgmt.projectsowservice.activities.LogActivity;
@@ -27,7 +20,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/lessons")
-@Validated
 public class LessonLearnedController {
 
 	@Autowired
@@ -36,10 +28,11 @@ public class LessonLearnedController {
 	@PostMapping
 	@LogActivity(action = "Created Lesson", module = "Lesson Management")
 	public ResponseEntity<LessonLearnedDTO> createLesson(@Valid @RequestBody LessonLearnedDTO dto,
-			@AuthenticationPrincipal UserDetails user) {
-		dto.setCreatedBy(user.getUsername());
+														 @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) {
+		dto.setCreatedBy(userName);
 		LessonLearnedDTO created = lessonService.createLesson(dto);
 
+		ActivityLogService.TOKEN=token;
 		ActivityContextHolder.setDetail("Lesson", dto.getTitle());
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -58,8 +51,9 @@ public class LessonLearnedController {
 	@PutMapping("/{id}")
 	@LogActivity(action = "Updated Lesson", module = "Lesson Management")
 	public ResponseEntity<LessonLearnedDTO> updateLesson(@PathVariable Long id,
-			@Valid @RequestBody LessonLearnedDTO dto, @AuthenticationPrincipal UserDetails user) {
-		dto.setUpdatedBy(user.getUsername());
+			@Valid @RequestBody LessonLearnedDTO dto, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) {
+		dto.setUpdatedBy(userName);
+		ActivityLogService.TOKEN = token;
 
 		LessonLearnedDTO resDto = lessonService.updateLesson(id, dto);
 
@@ -69,8 +63,9 @@ public class LessonLearnedController {
 
 	@DeleteMapping("/{id}")
 	@LogActivity(action = "Deleted Lesson", module = "Lesson Management")
-	public ResponseEntity<Void> deleteLesson(@PathVariable Long id) throws Exception {
+	public ResponseEntity<Void> deleteLesson(@PathVariable Long id, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String userName) throws Exception {
 		lessonService.deleteLesson(id);
+		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Lesson id: ", id.toString());
 		return ResponseEntity.noContent().build();
 	}

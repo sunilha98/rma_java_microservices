@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FulfillmentCreationRequestDTO {
-	private String projectCode;
+	private Long projectId;
 	private Long titleId;
 	private List<Long> skillsetIds;
 	private Long locationId;

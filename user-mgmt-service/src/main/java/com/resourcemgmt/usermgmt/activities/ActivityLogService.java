@@ -1,7 +1,9 @@
 package com.resourcemgmt.usermgmt.activities;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
+import com.resourcemgmt.usermgmt.controller.UsersController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -30,9 +32,10 @@ public class ActivityLogService {
 		String url = "http://localhost:8080/api/activity";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(UsersController.TOKEN);
 
 		HttpEntity<ActivityLogDTO> requestEntity = new HttpEntity<>(log, headers);
-		ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
+		ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
 	}
 
 }
