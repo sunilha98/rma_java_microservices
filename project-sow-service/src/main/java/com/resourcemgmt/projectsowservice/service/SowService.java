@@ -1,6 +1,7 @@
 package com.resourcemgmt.projectsowservice.service;
 
 import com.resourcemgmt.projectsowservice.dto.SowUploadRequest;
+import com.resourcemgmt.projectsowservice.dto.reports.ForecastingDTO;
 import com.resourcemgmt.projectsowservice.dto.reports.GovernanceDTO;
 import com.resourcemgmt.projectsowservice.entity.Project;
 import com.resourcemgmt.projectsowservice.entity.Sow;
@@ -98,5 +99,31 @@ public class SowService {
                 String.valueOf(s.getStatus()), s.getUpdatedAt())).collect(Collectors.toList());
 
         return governanceDTOS;
+    }
+
+    public List<ForecastingDTO> getForecastingReport(String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        String url = "http://localhost:8080/api/resources/countByTitleName";
+        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        Map<String, Long> resMap = response.getBody();
+
+        Map<String, List<Sow>> groupedSows = sowRepository.findAll().stream()
+				.collect(Collectors.groupingBy(sow -> sow.getTitle(),
+						Collectors.toList()));
+
+		List<ForecastingDTO> result = new ArrayList<>();
+
+		for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
+			String role = entry.getKey();
+			int demand = entry.getValue().size();
+
+            int available = resMap.get(role) != null ? Math.toIntExact(resMap.get(role)) : 0;
+
+            result.add(new ForecastingDTO(role, "N/A", demand, available));
+		}
+        return result;
     }
 }

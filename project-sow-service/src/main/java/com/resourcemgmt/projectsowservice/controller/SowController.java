@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
+import com.resourcemgmt.projectsowservice.dto.reports.ForecastingDTO;
 import com.resourcemgmt.projectsowservice.dto.reports.GovernanceDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -70,5 +71,10 @@ public class SowController {
 	public ResponseEntity<List<GovernanceDTO>> getGovernanceReport(@RequestHeader("X-Bearer-Token") String token) {
 
 		return ResponseEntity.ok(sowService.getGovernanceReport(token));
+	}
+
+	@GetMapping("/getForecastingReport")
+	public ResponseEntity<List<ForecastingDTO>> getForecastingReport(@RequestHeader("X-Bearer-Token") String token) {
+		return ResponseEntity.ok(sowService.getForecastingReport(token));
 	}
 }

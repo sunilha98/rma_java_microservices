@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/resources")
@@ -104,5 +106,15 @@ public class ResourceController {
     @GetMapping("/countBenchResources")
     public Long countBenchResources() {
         return resourceRepository.countBenchResources();
+    }
+
+    @GetMapping("/countByTitleName")
+    public Map<String, Long> countByTitleName() {
+        return resourceRepository.countByTitleName()
+                .stream()
+                .collect(Collectors.toMap(
+                        row -> (String) row[0],
+                        row -> (Long) row[1]
+                ));
     }
 }

@@ -24,9 +24,9 @@ public interface ResourceRepository extends JpaRepository<Resource, Long> {
 
 	@Query("SELECT COUNT(r) FROM Resource r JOIN r.skillsets s WHERE r.title.name = :title AND s.name = :skill")
 	long countByTitleAndSkill(@Param("title") String title, @Param("skill") String skill);
-	
-	@Query("SELECT COUNT(r) FROM Resource r WHERE r.title.name = :title")
-	int countByTitleName(@Param("title") String title);
+
+	@Query("SELECT r.title.name, COUNT(r) FROM Resource r GROUP BY r.title.name")
+	List<Object[]> countByTitleName();
 
 
 }

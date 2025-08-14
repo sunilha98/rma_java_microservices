@@ -55,10 +55,10 @@ public class ReportsController {
 		return ResponseEntity.ok(reportService.getBenchTrackingReport(token));
 	}
 
-//	@GetMapping("/forecasting")
-//	public ResponseEntity<List<ForecastingDTO>> getForecastingReport(@RequestHeader("X-Bearer-Token") String token) {
-//		return ResponseEntity.ok(reportService.getForecastingReport(token));
-//	}
+	@GetMapping("/forecasting")
+	public ResponseEntity<List<ForecastingDTO>> getForecastingReport(@RequestHeader("X-Bearer-Token") String token) {
+		return ResponseEntity.ok(reportService.getForecastingReport(token));
+	}
 
 	@GetMapping("/financial-metrics")
 	public ResponseEntity<List<FinancialMetricDTO>> getFinancialMetricsReport(@RequestHeader("X-Bearer-Token") String token) {

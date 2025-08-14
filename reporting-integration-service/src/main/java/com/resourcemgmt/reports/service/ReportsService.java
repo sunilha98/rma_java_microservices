@@ -114,25 +114,18 @@ public class ReportsService {
 	}
 
 
-//	public List<ForecastingDTO> getForecastingReport(String token) {
-//		Map<String, List<Sow>> groupedSows = sowRepository.findAll().stream()
-//				.collect(Collectors.groupingBy(sow -> sow.getTitle(),
-//						Collectors.toList()));
-//
-//		List<ForecastingDTO> result = new ArrayList<>();
-//
-//		for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
-//			String role = entry.getKey();
-//			int demand = entry.getValue().size();
-//
-//			// Count available resources with matching title
-//			int available = resourceRepository.countByTitleName(role);
-//
-//			result.add(new ForecastingDTO(role, "N/A", demand, available));
-//		}
-//
-//		return result;
-//	}
+	public List<ForecastingDTO> getForecastingReport(String token) {
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(token);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+		String url = "http://localhost:8080/api/sows/getForecastingReport";
+		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<ForecastingDTO> resList = response.getBody();
+
+		return resList;
+	}
 
 	public List<FinancialMetricDTO> getFinancialMetricsReport(String token) {
 
