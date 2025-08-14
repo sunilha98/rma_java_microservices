@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LogActivity {
-	String action();
+    String action();
 
-	String module();
+    String module();
 }
