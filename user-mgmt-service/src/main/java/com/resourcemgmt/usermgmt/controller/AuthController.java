@@ -3,6 +3,7 @@ package com.resourcemgmt.usermgmt.controller;
 import com.resourcemgmt.usermgmt.dto.AuthResponse;
 import com.resourcemgmt.usermgmt.dto.LoginRequest;
 import com.resourcemgmt.usermgmt.service.AuthService;
+import com.resourcemgmt.usermgmt.service.BlacklistedTokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +11,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
-//@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private BlacklistedTokenService blacklistedTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -26,5 +29,10 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser(@RequestHeader("X-Bearer-Token") String token) {
+        blacklistedTokenService.addToken(token);
+        return ResponseEntity.ok("User logged out successfully");
+    }
 
 }
