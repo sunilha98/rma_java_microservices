@@ -43,3 +43,12 @@ logging:
   level:
     com.resourcemanagement: INFO
     org.springframework.security: DEBUG
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/ # Eureka server URL
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
