@@ -29,9 +29,7 @@ public class LocationController {
 
 	@PostMapping
 	@LogActivity(action = "Created Location", module = "Location Management")
-	public Location createLocation(@RequestBody Location location, @RequestHeader("X-Bearer-Token") String token) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
+	public Location createLocation(@RequestBody Location location, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String username) {
 
 		Location resLocation = locationService.createLocation(location, username);
 
@@ -50,9 +48,7 @@ public class LocationController {
 
 	@PutMapping("/{id}")
 	@LogActivity(action = "Updated Location", module = "Location Management")
-	public Location updateLocation(@PathVariable Long id, @RequestBody Location location, @RequestHeader("X-Bearer-Token") String token) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
+	public Location updateLocation(@PathVariable Long id, @RequestBody Location location, @RequestHeader("X-Bearer-Token") String token, @RequestHeader("X-Auth-Username") String username) {
 
 		Location resLocation = locationService.updateLocation(id, location, username);
 
