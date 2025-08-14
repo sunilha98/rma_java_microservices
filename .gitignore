@@ -12,6 +12,7 @@ logs/
 
 # Maven
 target/
+target\
 pom.xml.tag
 pom.xml.next
 release.properties
