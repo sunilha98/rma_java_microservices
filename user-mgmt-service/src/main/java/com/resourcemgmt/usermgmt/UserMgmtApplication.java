@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableAsync
 public class UserMgmtApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(UserMgmtApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UserMgmtApplication.class, args);
+    }
 }
 
 // logout needed
