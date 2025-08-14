@@ -4,10 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.resourcemgmt.masterresource.activities.ActivityLogService;
 import com.resourcemgmt.masterresource.entity.ActivityLog;
@@ -25,7 +22,7 @@ public class ActivityLogController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ActivityLog> logActivity(ActivityLog activityLog) {
+	public ResponseEntity<ActivityLog> logActivity(@RequestBody ActivityLog activityLog) {
 		activityLogService.logActivity(activityLog.getAction(),
 				activityLog.getPerformedBy(),
 				activityLog.getRole(),
