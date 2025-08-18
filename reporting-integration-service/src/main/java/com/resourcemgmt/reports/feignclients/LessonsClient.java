@@ -1,6 +1,5 @@
-package com.resourcemgmt.reports.feigns.interfaces;
+package com.resourcemgmt.reports.feignclients;
 
-import com.resourcemgmt.reports.feigns.LessonsFeignFallback;
 import com.resourcemgmt.reports.reports.dto.LessonLearnedDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -10,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.List;
 
 @FeignClient(
-        name = "lessons-service",   // must match YAML
+        name = "lessons-service",
         url = "http://localhost:8080/api/lessons"
-//        fallback = LessonsFeignFallback.class
 )
 public interface LessonsClient {
 
