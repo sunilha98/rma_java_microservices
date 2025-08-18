@@ -1,5 +1,6 @@
 package com.resourcemgmt.reports.service;
 
+import com.resourcemgmt.reports.feigns.interfaces.LessonsClient;
 import com.resourcemgmt.reports.reports.dto.*;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,9 @@ public class ReportsService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private LessonsClient lessonsClient;
 
     public List<ProjectReportDTO> getInFlightProjects(String token) {
 
@@ -151,23 +155,26 @@ public class ReportsService {
         return resList;
     }
 
-    @CircuitBreaker(name = "lessonsService", fallbackMethod = "getLessonsFallback")
+//    @CircuitBreaker(name = "lessonsService", fallbackMethod = "getLessonsFallback")
     public List<LessonLearnedDTO> getLessonsLearnedRepository(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/lessons/getLessonsLearnedReports";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//        List<LessonLearnedDTO> resList = response.getBody();
 
-        String url = "http://localhost:8080/api/lessons/getLessonsLearnedReports";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<LessonLearnedDTO> resList = response.getBody();
+//        return resList;
 
-        return resList;
+        String bearerToken = "Bearer " + token;
+        return lessonsClient.getLessonsLearnedReports(bearerToken);
     }
 
-	// Fallback method
-	public List<LessonLearnedDTO> getLessonsFallback(String token, Throwable ex) {
-		System.err.println("Fallback triggered due to: " + ex.getMessage());
-		// Return cached response OR empty list
-		return Collections.emptyList();
-	}
+//	// Fallback method
+//	public List<LessonLearnedDTO> getLessonsFallback(String token, Throwable ex) {
+//		System.err.println("Fallback triggered due to: " + ex.getMessage());
+//		// Return cached response OR empty list
+//		return Collections.emptyList();
+//	}
 }
