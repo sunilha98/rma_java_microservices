@@ -29,7 +29,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,metrics
   endpoint:
     health:
       show-details: WHEN_AUTHORIZED
@@ -53,3 +53,13 @@ eureka:
   instance:
     prefer-ip-address: true
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      lessonsService:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 200ms
+        permittedNumberOfCallsInHalfOpenState: 2
+        automaticTransitionFromOpenToHalfOpenEnabled: true
