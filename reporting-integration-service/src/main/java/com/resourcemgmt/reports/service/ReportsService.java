@@ -1,6 +1,6 @@
 package com.resourcemgmt.reports.service;
 
-import com.resourcemgmt.reports.feignclients.LessonsClient;
+import com.resourcemgmt.reports.feignclients.*;
 import com.resourcemgmt.reports.reports.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,39 +22,45 @@ public class ReportsService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
-    private LessonsClient lessonsClient;
+    private final AllocationsClient allocationsClient;
+    private final LessonsClient lessonsClient;
+    private final ProjectsClient projectsClient;
+    private final ProjectStatusClient projectStatusClient;
+    private final SowsClient sowsClient;
 
     public List<ProjectReportDTO> getInFlightProjects(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/IN_FLIGHT";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        return response.getBody();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/projects/status/IN_FLIGHT";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//        return response.getBody();
+        return projectsClient.getProjectsByStatus(token, "IN_FLIGHT").getBody();
     }
 
     public List<ProjectReportDTO> getProposedProjects(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/PROPOSED";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        return response.getBody();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/projects/status/PROPOSED";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//        return response.getBody();
+        return projectsClient.getProjectsByStatus(token, "PROPOSED").getBody();
     }
 
     public List<SpendTrackingDTO> getSpendTrackingReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/spend-tracking";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/projects/status/spend-tracking";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List> response = projectsClient.getSpendTrackingReport(token);
         List<Map<String, Object>> resList = response.getBody();
 
         List<SpendTrackingDTO> result = new ArrayList<>();
@@ -67,12 +73,13 @@ public class ReportsService {
 
     public List<RiskIssueDTO> getRisksAndIssuesReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/project-status/getRisksAndIssuesReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/project-status/getRisksAndIssuesReport";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List<RiskIssueDTO>> response = projectStatusClient.getRisksAndIssuesReport(token);
         List<RiskIssueDTO> resList = response.getBody();
         return resList;
     }

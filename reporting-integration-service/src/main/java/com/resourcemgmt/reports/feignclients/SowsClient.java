@@ -4,7 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(
         name = "lessons-service",
-        url = "http://localhost:8080/api/project-status"
+        url = "http://localhost:8080/api/sows"
 )
-public interface ProjectStatusService {
+public interface SowsClient {
 }
