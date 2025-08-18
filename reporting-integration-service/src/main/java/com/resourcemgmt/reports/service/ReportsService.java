@@ -1,12 +1,10 @@
 package com.resourcemgmt.reports.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -164,6 +162,7 @@ public class ReportsService {
 		return resList;
 	}
 
+	@CircuitBreaker(name = "lessonsService", fallbackMethod = "getLessonsFallback")
 	public List<LessonLearnedDTO> getLessonsLearnedRepository(String token) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setBearerAuth(token);
@@ -174,5 +173,12 @@ public class ReportsService {
 		List<LessonLearnedDTO> resList = response.getBody();
 
 		return resList;
+	}
+
+	// Fallback method
+	public List<LessonLearnedDTO> getLessonsFallback(String token, Throwable ex) {
+		System.err.println("Fallback triggered due to: " + ex.getMessage());
+		// Return cached response OR empty list
+		return Collections.emptyList();
 	}
 }
