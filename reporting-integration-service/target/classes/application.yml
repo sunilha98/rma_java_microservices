@@ -26,13 +26,18 @@ server:
   port: ${PORT:8084}
 
 management:
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
   endpoints:
     web:
       exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: WHEN_AUTHORIZED
+        include: health,info,metrics,circuitbreakers,circuitbreakerevents
+  health:
+    circuitbreakers:
+      enabled: true
+
 
 app:
   jwt:
@@ -59,7 +64,8 @@ resilience4j:
       lessonsService:
         registerHealthIndicator: true
         slidingWindowSize: 5
+        minimumNumberOfCalls: 5        # <-- add this for quick testing
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
+        waitDurationInOpenState: 10s   # for manual testing; use 200ms in tests
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
