@@ -39,7 +39,7 @@ public class ActivityLogService {
         ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
     }
 
-    public void activityLogFallback(String action, Throwable throwable) {
+    public void activityLogFallback(String action, String performedBy, String role, String module, String details, Throwable throwable) {
         // Log the fallback error or handle it as needed
         System.err.println("Failed to log activity: " + action + " due to " + throwable.getMessage());
     }
