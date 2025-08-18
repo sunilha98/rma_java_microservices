@@ -2,6 +2,7 @@ package com.resourcemgmt.usermgmt.activities;
 
 import com.resourcemgmt.usermgmt.controller.UsersController;
 import com.resourcemgmt.usermgmt.dto.ActivityLogDTO;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,7 @@ public class ActivityLogService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @CircuitBreaker(name = "activityLogService", fallbackMethod = "activityLogFallback")
     public void logActivity(String action, String performedBy, String role, String module, String details) {
         ActivityLogDTO log = new ActivityLogDTO();
         log.setAction(action);
@@ -35,6 +37,11 @@ public class ActivityLogService {
 
         HttpEntity<ActivityLogDTO> requestEntity = new HttpEntity<>(log, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
+    }
+
+    public void activityLogFallback(String action, Throwable throwable) {
+        // Log the fallback error or handle it as needed
+        System.err.println("Failed to log activity: " + action + " due to " + throwable.getMessage());
     }
 
 }

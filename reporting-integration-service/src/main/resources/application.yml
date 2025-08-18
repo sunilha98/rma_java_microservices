@@ -64,8 +64,8 @@ resilience4j:
       lessonsService:
         registerHealthIndicator: true
         slidingWindowSize: 5
-        minimumNumberOfCalls: 5        # <-- add this for quick testing
+        minimumNumberOfCalls: 5
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s   # for manual testing; use 200ms in tests
+        waitDurationInOpenState: 10s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
