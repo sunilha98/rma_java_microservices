@@ -242,6 +242,7 @@ curl http://localhost:8083/actuator/circuitbreakers
 # 6. Check state (should be HALF_OPEN)
 curl http://localhost:8083/actuator/circuitbreakers
 
+
 # 7. Restart project service
 # 8. Make 3+ successful requests
 # 9. Check state (should return to CLOSED)
