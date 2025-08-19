@@ -123,6 +123,7 @@ class ProjectServiceTest {
         assertTrue((Boolean) result.get("fallback"));
     }
 
+
     @Test
     void getProjectsFallback_ReturnsExpectedStructure() {
         // Arrange
