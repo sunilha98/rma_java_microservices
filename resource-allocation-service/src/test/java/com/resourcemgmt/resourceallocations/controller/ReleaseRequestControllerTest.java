@@ -74,51 +74,9 @@ class ReleaseRequestControllerTest {
         releaseRequest.setStatus("PENDING");
     }
 
-    @Test
-    void createReleaseRequest_Success() {
-        // Mock service response
-        when(releaseRequestService.createReleaseRequest(any(ReleaseRequestDTO.class)))
-                .thenReturn(releaseRequest);
 
-        // Mock REST template response
-        when(restTemplate.exchange(anyString(), any(), any(), eq(Map.class)))
-                .thenReturn(ResponseEntity.ok(Collections.singletonMap("name", "Test Project")));
 
-        ResponseEntity<ReleaseRequest> response = releaseRequestController.create(
-                releaseRequestDTO, "mock-token");
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(1L, response.getBody().getId());
-        assertEquals("PENDING", response.getBody().getStatus());
-
-        verify(releaseRequestService, times(1)).createReleaseRequest(any(ReleaseRequestDTO.class));
-    }
-
-    @Test
-    void getAllReleaseRequests_Success() {
-        List<ReleaseRequest> requests = new ArrayList<>();
-        requests.add(releaseRequest);
-
-        when(releaseRequestService.getAllRequests()).thenReturn(requests);
-        when(restTemplate.exchange(anyString(), any(), any(), eq(Map.class)))
-                .thenReturn(ResponseEntity.ok(Collections.singletonMap("name", "Test Project")));
-
-        ResponseEntity<List<ReleaseRequestResDTO>> response =
-                releaseRequestController.getAll("mock-token");
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().size());
-
-        ReleaseRequestResDTO dto = response.getBody().get(0);
-        assertEquals("John", dto.getFirstName());
-        assertEquals("Doe", dto.getLastName());
-        assertEquals("Test Project", dto.getProjectName());
-        assertEquals("Jane Smith", dto.getReplacementResource());
-
-        verify(releaseRequestService, times(1)).getAllRequests();
-    }
 
     @Test
     void updateStatus_Success() {

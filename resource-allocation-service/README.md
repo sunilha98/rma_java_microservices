@@ -275,3 +275,6 @@ curl -X GET http://localhost:8080/api/dashboard/metrics \
 - Security event logging
 
 This Spring Boot backend provides a robust, scalable foundation for the Resource Management Application with enterprise-grade security, comprehensive API coverage, and production-ready features.
+
+
+mvn test jacoco:report

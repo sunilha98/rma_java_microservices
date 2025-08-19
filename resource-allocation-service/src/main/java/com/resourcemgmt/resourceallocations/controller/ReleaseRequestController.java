@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.resourcemgmt.resourceallocations.activities.ActivityLogService;
 import com.resourcemgmt.resourceallocations.dto.ReleaseRequestResDTO;
+import com.resourcemgmt.resourceallocations.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,6 @@ import com.resourcemgmt.resourceallocations.activities.LogActivity;
 import com.resourcemgmt.resourceallocations.dto.ReleaseRequestDTO;
 import com.resourcemgmt.resourceallocations.entity.ReleaseRequest;
 import com.resourcemgmt.resourceallocations.service.ReleaseRequestService;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/release-requests")
@@ -25,20 +25,15 @@ public class ReleaseRequestController {
 	private ReleaseRequestService releaseRequestService;
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private ProjectService projectService;
 
 	@PostMapping
 	@LogActivity(action = "Release Request Added", module = "Release Request Management")
 	public ResponseEntity<ReleaseRequest> create(@RequestBody ReleaseRequestDTO dto, @RequestHeader("X-Bearer-Token") String token) {
 		ReleaseRequest saved = releaseRequestService.createReleaseRequest(dto);
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-		String url = "http://localhost:8080/api/projects/"+ saved.getProjectId();
-		ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-		String projectName = response.getBody().get("name").toString();
+		Map<String, Object> projectDetails = projectService.getProjectDetails(saved.getProjectId(), token);
+		String projectName = projectDetails.get("name").toString();
 
 		ActivityLogService.TOKEN = token;
 		ActivityContextHolder.setDetail("Project", projectName);
@@ -54,14 +49,8 @@ public class ReleaseRequestController {
 		List<ReleaseRequestResDTO> releaseRequestResDTOs = new ArrayList<>();
 
 		for (ReleaseRequest releaseRequest : releaseRequests) {
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.setBearerAuth(token);
-			HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-			String url = "http://localhost:8080/api/projects/"+ releaseRequest.getProjectId();
-			ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-			String projectName = response.getBody().get("name").toString();
+			Map<String, Object> projectDetails = projectService.getProjectDetails(releaseRequest.getProjectId(), token);
+			String projectName = projectDetails.get("name").toString();
 
 			ReleaseRequestResDTO resDTO = new ReleaseRequestResDTO();
 			resDTO.setId(releaseRequest.getId());
@@ -71,7 +60,13 @@ public class ReleaseRequestController {
 			resDTO.setStatus(releaseRequest.getStatus());
 			resDTO.setNotes(releaseRequest.getNotes());
 			resDTO.setReason(releaseRequest.getReason());
-			resDTO.setReplacementResource(releaseRequest.getReplacement().getFirstName()+" "+releaseRequest.getReplacement().getLastName());
+			
+			if (releaseRequest.getReplacement() != null) {
+				resDTO.setReplacementResource(releaseRequest.getReplacement().getFirstName() + " " + releaseRequest.getReplacement().getLastName());
+			} else {
+				resDTO.setReplacementResource("N/A");
+			}
+			
 			resDTO.setEffectiveDate(releaseRequest.getEffectiveDate());
 			releaseRequestResDTOs.add(resDTO);
 		}
