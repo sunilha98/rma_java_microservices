@@ -1,11 +1,10 @@
 package com.resourcemgmt.masterresource.repository;
 
-import java.util.List;
-
+import com.resourcemgmt.masterresource.entity.ActivityLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.resourcemgmt.masterresource.entity.ActivityLog;
+import java.util.List;
 
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Long> {
-	List<ActivityLog> findTop10ByOrderByTimestampDesc();
+    List<ActivityLog> findTop10ByOrderByTimestampDesc();
 }

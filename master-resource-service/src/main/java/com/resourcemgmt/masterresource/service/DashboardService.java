@@ -1,37 +1,37 @@
 package com.resourcemgmt.masterresource.service;
 
 import com.resourcemgmt.masterresource.dto.DashboardMetricsDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import com.resourcemgmt.masterresource.feignclients.ProjectsClient;
+import com.resourcemgmt.masterresource.feignclients.ResourceClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
+@RequiredArgsConstructor
 @Service
 public class DashboardService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final ProjectsClient projectsClient;
+    private final ResourceClient resourceClient;
 
     public DashboardMetricsDTO getDashboardMetrics(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/countActiveProjects";
-        ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET, entity, Long.class);
+//        String url = "http://localhost:8080/api/projects/countActiveProjects";
+//        ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET, entity, Long.class);
+        ResponseEntity<Long> response = projectsClient.countActiveProjects("Bearer " + token);
         Long activeProjects = response.getBody();
 
-        String url2 = "http://localhost:8080/api/resources/countActiveResources";
-        ResponseEntity<Long> response2 = restTemplate.exchange(url2, HttpMethod.GET, entity, Long.class);
-        Long totalResources = response2.getBody();
+//        String url2 = "http://localhost:8080/api/resources/countActiveResources";
+//        ResponseEntity<Long> response2 = restTemplate.exchange(url2, HttpMethod.GET, entity, Long.class);
+        Long totalResources = resourceClient.countActiveProjects("Bearer " + token).getBody();
 
-        String url3 = "http://localhost:8080/api/resources/countBenchResources";
-        ResponseEntity<Long> response3 = restTemplate.exchange(url3, HttpMethod.GET, entity, Long.class);
-        Long benchResources = response3.getBody();
+//        String url3 = "http://localhost:8080/api/resources/countBenchResources";
+//        ResponseEntity<Long> response3 = restTemplate.exchange(url3, HttpMethod.GET, entity, Long.class);
+        Long benchResources = resourceClient.countBenchResources("Bearer " + token).getBody();
 
         Long allocatedResources = totalResources - benchResources;
         Integer utilizationRate = totalResources > 0
