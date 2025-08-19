@@ -7,6 +7,8 @@ import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
 import com.resourcemgmt.projectsowservice.dto.reports.FinancialMetricDTO;
 import com.resourcemgmt.projectsowservice.dto.reports.PortfolioDTO;
 import com.resourcemgmt.projectsowservice.dto.reports.ProjectReportDTO;
+import com.resourcemgmt.projectsowservice.feignclients.ClientsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,15 +24,13 @@ import com.resourcemgmt.projectsowservice.dto.ProjectsDTO;
 import com.resourcemgmt.projectsowservice.entity.Project;
 import com.resourcemgmt.projectsowservice.repository.ProjectRepository;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/projects")
 public class ProjectController {
 
-	@Autowired
-	private ProjectRepository projectRepository;
-	
-	@Autowired
-	private RestTemplate restTemplate;
+	private final ProjectRepository projectRepository;
+    private final ClientsService clientsService;
 
 	@GetMapping
 	public ResponseEntity<List<ProjectsDTO>> getAllProjects(@RequestHeader("X-Bearer-Token") String token) {
@@ -45,13 +45,14 @@ public class ProjectController {
 
 	private ProjectsDTO mapToSummaryDTO(Project project, String token) {
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-		String url = "http://localhost:8080/api/clients/"+project.getClientId();
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-        String clientName= response.getBody().get("name").toString();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setBearerAuth(token);
+//		HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//		String url = "http://localhost:8080/api/clients/"+project.getClientId();
+//      ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+		ResponseEntity<Map> response = clientsService.getClientByID("Bearer " + token, project.getClientId());
+		String clientName= response.getBody().get("name").toString();
 		
 		ProjectsDTO dto = new ProjectsDTO();
 		dto.setId(project.getId());
@@ -107,13 +108,13 @@ public class ProjectController {
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<ProjectReportDTO>> getProjectByStatus(@PathVariable String status, @RequestHeader("X-Bearer-Token") String token) {
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-		String url = "http://localhost:8080/api/clients";
-		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-		List<Map<String, Object>> allClients = response.getBody();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setBearerAuth(token);
+//		HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//		String url = "http://localhost:8080/api/clients";
+//		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<Map<String, Object>> allClients = clientsService.getAllClients("Bearer "+token).getBody();
 
 		Map<Long, String> clientMap = new HashMap<>();
 		allClients.forEach(m -> {
@@ -134,13 +135,13 @@ public class ProjectController {
 	public ResponseEntity<List<Map<String, Object>>> getSpendTrackingReport(@RequestHeader("X-Bearer-Token") String token) {
 		List<Project> projects = projectRepository.findByStatus("IN_FLIGHT");
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-		String url = "http://localhost:8080/api/clients";
-		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-		List<Map<String, Object>> allClients = response.getBody();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setBearerAuth(token);
+//		HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//		String url = "http://localhost:8080/api/clients";
+//		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+		List<Map<String, Object>> allClients = clientsService.getAllClients("Bearer "+token).getBody();
 
 		Map<Long, String> clientMap = new HashMap<>();
 		allClients.forEach(m -> {
@@ -172,13 +173,14 @@ public class ProjectController {
 	@GetMapping("/getPortfolioReports")
 	public ResponseEntity<List<PortfolioDTO>> getPortfolioReports(@RequestHeader("X-Bearer-Token") String token) {
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-		String url = "http://localhost:8080/api/clients";
-		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-		List<Map<String, Object>> allClients = response.getBody();
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setBearerAuth(token);
+//		HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//		String url = "http://localhost:8080/api/clients";
+//		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+//		List<Map<String, Object>> allClients = response.getBody();
+		List<Map<String, Object>> allClients = clientsService.getAllClients("Bearer "+token).getBody();
 
 		Map<Long, String> clientMap = new HashMap<>();
 		allClients.forEach(m -> {
