@@ -19,8 +19,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class ActivityLogService {
 
-	private final ActivityServiceClient activityServiceClient;
 	public static String TOKEN;
+	private final RestTemplate restTemplate;
 
 	public void logActivity(String action, String performedBy, String role, String module, String details) {
 		ActivityLogDTO log = new ActivityLogDTO();
@@ -31,15 +31,13 @@ public class ActivityLogService {
 		log.setDetails(details);
 		log.setTimestamp(LocalDateTime.now());
 
-//		String url = "http://localhost:8080/api/activity";
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_JSON);
-//		headers.setBearerAuth(TOKEN);
-//
-//		HttpEntity<ActivityLogDTO> requestEntity = new HttpEntity<>(log, headers);
-//		ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
+		String url = "http://localhost:8080/api/activity";
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(TOKEN);
 
-		activityServiceClient.logActivity(log, "Bearer " + TOKEN);
+		HttpEntity<ActivityLogDTO> requestEntity = new HttpEntity<>(log, headers);
+		ResponseEntity<Map> response = restTemplate.postForEntity(url, requestEntity, Map.class);
 	}
 
 }

@@ -52,7 +52,10 @@ public class ProjectController {
 //		String url = "http://localhost:8080/api/clients/"+project.getClientId();
 //      ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
 		ResponseEntity<Map> response = clientsService.getClientByID("Bearer " + token, project.getClientId());
-		String clientName= response.getBody().get("name").toString();
+		String clientName= "";
+		if (response.getBody() != null && !response.getBody().isEmpty() && response.getBody().get("name") != null) {
+			clientName = response.getBody().get("name").toString();
+		}
 		
 		ProjectsDTO dto = new ProjectsDTO();
 		dto.setId(project.getId());

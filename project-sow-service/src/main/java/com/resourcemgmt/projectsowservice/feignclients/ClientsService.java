@@ -16,7 +16,7 @@ import java.util.Map;
 )
 public interface ClientsService {
 
-    @GetMapping("/getClientByID/{id}")
+    @GetMapping("/{id}")
     @CircuitBreaker(name = "client-service", fallbackMethod = "getClientServiceFallback")
     ResponseEntity<Map> getClientByID(@RequestHeader("Authorization") String bearerToken, @PathVariable Long id);
 
