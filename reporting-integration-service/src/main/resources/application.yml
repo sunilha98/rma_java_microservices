@@ -60,13 +60,45 @@ eureka:
 
 feign:
   circuitbreaker:
-    enabled: true   # ✅ enables resilience4j wrapping of feign
+    enabled: true
 
 resilience4j:
   circuitbreaker:
     instances:
-      lessons-service:   # ✅ must match Feign client name
-        register-health-indicator: true   # ✅ kebab-case
+      lessons-service:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      allocations-service:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      projects-service:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      project-status-service:
+        register-health-indicator: true
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+      sows-service:
+        register-health-indicator: true
         sliding-window-size: 5
         minimum-number-of-calls: 5
         failure-rate-threshold: 50
