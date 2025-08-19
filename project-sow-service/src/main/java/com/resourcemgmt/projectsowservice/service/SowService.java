@@ -7,16 +7,13 @@ import com.resourcemgmt.projectsowservice.entity.Project;
 import com.resourcemgmt.projectsowservice.entity.Sow;
 import com.resourcemgmt.projectsowservice.entity.Sow.Priority;
 import com.resourcemgmt.projectsowservice.entity.Sow.SowStatus;
+import com.resourcemgmt.projectsowservice.feignclients.ClientsService;
+import com.resourcemgmt.projectsowservice.feignclients.ResourceServiceClient;
 import com.resourcemgmt.projectsowservice.repository.PracticeRepository;
 import com.resourcemgmt.projectsowservice.repository.ProjectRepository;
 import com.resourcemgmt.projectsowservice.repository.SowRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -27,23 +24,15 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class SowService {
 
     private final PracticeRepository practiceRepository;
-
-    @Autowired
-    private SowRepository sowRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    SowService(PracticeRepository practiceRepository) {
-        this.practiceRepository = practiceRepository;
-    }
+    private final SowRepository sowRepository;
+    private final ProjectRepository projectRepository;
+    private final ClientsService clientsService;
+    private final ResourceServiceClient resourceService;
 
     public void handleSowUpload(MultipartFile file, SowUploadRequest request) throws IOException {
 
@@ -80,13 +69,13 @@ public class SowService {
 
     public List<GovernanceDTO> getGovernanceReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/clients";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<Map<String, Object>> allClients = response.getBody();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/clients";
+//        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        List<Map<String, Object>> allClients = clientsService.getAllClients("Bearer " + token).getBody();
 
         Map<Long, String> clientMap = new HashMap<>();
         allClients.forEach(m -> {
@@ -95,35 +84,35 @@ public class SowService {
             clientMap.put(clientId, clientName);
         });
 
-        List<GovernanceDTO> governanceDTOS =  sowRepository.findAll().stream().map(s -> new GovernanceDTO(s.getId(), clientMap.get(s.getClientId()),
+        List<GovernanceDTO> governanceDTOS = sowRepository.findAll().stream().map(s -> new GovernanceDTO(s.getId(), clientMap.get(s.getClientId()),
                 String.valueOf(s.getStatus()), s.getUpdatedAt())).collect(Collectors.toList());
 
         return governanceDTOS;
     }
 
     public List<ForecastingDTO> getForecastingReport(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/resources/countByTitleName";
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
-        Map<String, Long> resMap = response.getBody();
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setBearerAuth(token);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//
+//        String url = "http://localhost:8080/api/resources/countByTitleName";
+//        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+        Map<String, Long> resMap = resourceService.countByTitleName("Bearer " + token).getBody();
 
         Map<String, List<Sow>> groupedSows = sowRepository.findAll().stream()
-				.collect(Collectors.groupingBy(sow -> sow.getTitle(),
-						Collectors.toList()));
+                .collect(Collectors.groupingBy(sow -> sow.getTitle(),
+                        Collectors.toList()));
 
-		List<ForecastingDTO> result = new ArrayList<>();
+        List<ForecastingDTO> result = new ArrayList<>();
 
-		for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
-			String role = entry.getKey();
-			int demand = entry.getValue().size();
+        for (Map.Entry<String, List<Sow>> entry : groupedSows.entrySet()) {
+            String role = entry.getKey();
+            int demand = entry.getValue().size();
 
             int available = resMap.get(role) != null ? Math.toIntExact(resMap.get(role)) : 0;
 
             result.add(new ForecastingDTO(role, "N/A", demand, available));
-		}
+        }
         return result;
     }
 }

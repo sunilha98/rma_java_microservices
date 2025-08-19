@@ -8,6 +8,8 @@ import java.util.Map;
 import com.resourcemgmt.projectsowservice.activities.ActivityLogService;
 import com.resourcemgmt.projectsowservice.dto.reports.ForecastingDTO;
 import com.resourcemgmt.projectsowservice.dto.reports.GovernanceDTO;
+import com.resourcemgmt.projectsowservice.feignclients.ClientsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,16 +25,14 @@ import com.resourcemgmt.projectsowservice.activities.LogActivity;
 import com.resourcemgmt.projectsowservice.dto.SowUploadRequest;
 import com.resourcemgmt.projectsowservice.service.SowService;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/sows")
 public class SowController {
 
-	@Autowired
-	private SowService sowService;
+	private final SowService sowService;
+	private final ClientsService clientsService;
 	
-	@Autowired
-	private RestTemplate restTemplate;
-
 	@PostMapping("/upload")
 	@LogActivity(action = "Created SOW", module = "SOW Management")
 	public ResponseEntity<String> uploadSow(@RequestParam("file") MultipartFile file,
@@ -44,13 +44,14 @@ public class SowController {
 		List<SowUploadRequest.PositionRequest> positions = Arrays
 				.asList(mapper.readValue(positionsJson, SowUploadRequest.PositionRequest[].class));
 
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBearerAuth(token);
-		HttpEntity<Void> entity = new HttpEntity<>(headers);
-		ActivityLogService.TOKEN = token;
-
-		String url = "http://localhost:8080/api/clients/getByName/"+clientName;
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+//		HttpHeaders headers = new HttpHeaders();
+//		headers.setBearerAuth(token);
+//		HttpEntity<Void> entity = new HttpEntity<>(headers);
+//		ActivityLogService.TOKEN = token;
+//
+//		String url = "http://localhost:8080/api/clients/getByName/"+clientName;
+//        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+		ResponseEntity<Map> response = clientsService.getClientByName("Bearer " + token, clientName);
         Long clientId= Long.parseLong(response.getBody().get("id").toString());
 
 		SowUploadRequest request = new SowUploadRequest();
