@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SpendTrackingDTO {
 
-	private String clientName;
-	private String projectName;
-	private double plannedSpend;
-	private double actualSpend;
-	private double variance;
+    private String clientName;
+    private String projectName;
+    private double plannedSpend;
+    private double actualSpend;
+    private double variance;
 
 }

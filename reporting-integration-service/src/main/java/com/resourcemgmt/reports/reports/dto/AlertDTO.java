@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertDTO {
-	private String alertType;
-	private String message;
-	private String issues;
+    private String alertType;
+    private String message;
+    private String issues;
 }

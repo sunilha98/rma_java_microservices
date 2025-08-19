@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAsync
 @EnableFeignClients
 public class ReportingIntegrationApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(ReportingIntegrationApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ReportingIntegrationApplication.class, args);
+    }
 }

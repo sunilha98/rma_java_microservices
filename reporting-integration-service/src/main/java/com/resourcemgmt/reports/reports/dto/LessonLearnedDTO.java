@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LessonLearnedDTO {
-	private Long projectId;
-	private String projectName;
-	private String insight;
-	private String category;
+    private Long projectId;
+    private String projectName;
+    private String insight;
+    private String category;
 }

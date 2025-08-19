@@ -1,6 +1,5 @@
 package com.resourcemgmt.reports.feignclients;
 
-import com.resourcemgmt.reports.reports.dto.LessonLearnedDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +17,28 @@ import java.util.List;
 public interface ProjectsClient {
 
     @GetMapping("/status/{status}")
-    @CircuitBreaker(name = "projects-service", fallbackMethod = "getProjectsByStatusReportsFallback")
+    @CircuitBreaker(name = "projects-service", fallbackMethod = "getProjectByStatusServiceFallback")
     ResponseEntity<List> getProjectsByStatus(@RequestHeader("Authorization") String bearerToken, @PathVariable String status);
 
-    default ResponseEntity<List> getProjectsByStatusReportsFallback(String bearerToken, Throwable throwable) {
-        System.out.println("Fallback triggered: Projects service unavailable. Reason: " + throwable.getMessage());
+    default ResponseEntity<List> getProjectByStatusServiceFallback(String bearerToken, String status, Throwable throwable) {
+        System.out.println("Fallback triggered: Projects service unavailable for status " + status + ". Reason: " + throwable.getMessage());
         return ResponseEntity.ok(Collections.emptyList());
     }
 
     @GetMapping("/status/spend-tracking")
-    @CircuitBreaker(name = "projects-service", fallbackMethod = "getSpendTrackingReportFallback")
-    ResponseEntity<List> getSpendTrackingReport(String token);
+    @CircuitBreaker(name = "projects-service", fallbackMethod = "getProjectsServiceFallback")
+    ResponseEntity<List> getSpendTrackingReport(@RequestHeader("Authorization") String bearerToken);
 
-    default ResponseEntity<List> getSpendTrackingReportFallback(String token, Throwable throwable) {
-        System.out.println("Fallback triggered: Spend tracking report unavailable. Reason: " + throwable.getMessage());
+    @GetMapping("/getFinancialMetricsReport")
+    @CircuitBreaker(name = "projects-service", fallbackMethod = "getProjectsServiceFallback")
+    ResponseEntity<List> getFinancialMetricsReport(@RequestHeader("Authorization") String bearerToken);
+
+    @GetMapping("/getPortfolioReports")
+    @CircuitBreaker(name = "projects-service", fallbackMethod = "getProjectsServiceFallback")
+    ResponseEntity<List> getPortfolioReports(@RequestHeader("Authorization") String bearerToken);
+
+    default ResponseEntity<List> getProjectsServiceFallback(String bearerToken, Throwable throwable) {
+        System.out.println("Fallback triggered: Projects service unavailable. Reason: " + throwable.getMessage());
         return ResponseEntity.ok(Collections.emptyList());
     }
 }
