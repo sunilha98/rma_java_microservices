@@ -40,7 +40,7 @@ public class ProjectService {
         throw new RuntimeException("Failed to fetch project details");
     }
 
-    public Map<String, Object> getProjectFallback(Long projectId, String token, Exception ex) {
+    public Map<String, Object> getProjectFallback(Long projectId, String token, Throwable ex) {
         log.error("Circuit breaker activated for project service. ProjectId: {}, Error: {}", projectId, ex.getMessage());
         
         Map<String, Object> fallbackResponse = new HashMap<>();
@@ -71,7 +71,7 @@ public class ProjectService {
         throw new RuntimeException("Failed to fetch projects");
     }
 
-    public Map<String, Object> getProjectsFallback(String token, Exception ex) {
+    public Map<String, Object> getProjectsFallback(String token, Throwable ex) {
         log.error("Circuit breaker activated for projects service. Error: {}", ex.getMessage());
         
         Map<String, Object> fallbackResponse = new HashMap<>();

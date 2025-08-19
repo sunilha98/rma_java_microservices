@@ -29,10 +29,12 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,circuitbreakers,circuitbreakerevents
+        include: health,info,circuitbreakers,circuitbreakerevents,metrics
   endpoint:
     health:
-      show-details: WHEN_AUTHORIZED
+      show-details: always
+    circuitbreakers:
+      enabled: true
   health:
     circuitbreakers:
       enabled: true
