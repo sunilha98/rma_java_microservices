@@ -1,18 +1,19 @@
-# Compiled class files
+######################################
+# Java & Build Artifacts
+######################################
 *.class
-
-# Log files
 *.log
 logs/
-
-# Package Files
 *.jar
 *.war
+*.ear
 *.zip
+*.tar.gz
+*.rar
 
 # Maven
 target/
-target\
+**/target/
 pom.xml.tag
 pom.xml.next
 release.properties
@@ -22,26 +23,47 @@ buildNumber.properties
 
 # Gradle
 .gradle/
+**/build/
 build/
 
-# Eclipse
+######################################
+# Eclipse / STS
+######################################
 .classpath
 .project
 .settings/
-.idea/
-.vscode/
+**/.classpath
+**/.project
+**/.settings/
 
+######################################
 # IntelliJ
+######################################
 .idea/
 *.iws
 *.iml
 *.ipr
 out/
+**/.idea/
+**/*.iws
+**/*.iml
+**/*.ipr
+**/out/
 
-# IDE-specific directories and files
+######################################
+# VS Code
+######################################
+.vscode/
+**/.vscode/
+
+######################################
+# OS / Misc
+######################################
 .metadata
 bin/
+**/bin/
 tmp/
+**/tmp/
 *.tmp
 *.bak
 *.swp
@@ -49,3 +71,11 @@ tmp/
 local.properties
 .DS_Store
 Thumbs.db
+
+######################################
+# Extra
+######################################
+# Ignore generated reports or cache dirs
+*.orig
+*.rej
+*.patch
