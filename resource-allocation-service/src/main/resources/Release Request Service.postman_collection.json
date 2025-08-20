@@ -1,0 +1,101 @@
+{
+	"info": {
+		"_postman_id": "49b85eb1-cf4e-4769-8595-c29d311b48c9",
+		"name": "Release Request Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47450144",
+		"_collection_link": "https://suruchivaidya405-7688925.postman.co/workspace/suruchi's-Workspace~1af46810-3fce-43ff-803c-131576afda1f/collection/47450144-49b85eb1-cf4e-4769-8595-c29d311b48c9?action=share&source=collection_link&creator=47450144"
+	},
+	"item": [
+		{
+			"name": "ReleaseRequestController",
+			"item": [
+				{
+					"name": "GET /release-requests",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Bearer-Token",
+								"value": "test123"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/release-requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"release-requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /release-requests",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Bearer-Token",
+								"value": "test123"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resourceId\": 123,\n  \"projectId\": 456,\n  \"releaseDate\": \"2025-08-19\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/release-requests",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"release-requests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8083/actuator/circuitbreakers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/actuator/circuitbreakers",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"actuator",
+								"circuitbreakers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8083"
+		}
+	]
+}
