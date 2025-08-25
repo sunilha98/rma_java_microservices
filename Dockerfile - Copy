@@ -1,0 +1,43 @@
+# ================================
+# Stage 1: Build microservices
+# ================================
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
+WORKDIR /app
+COPY . /app/rma_microservices
+
+RUN mvn -f rma_microservices/eureka-server/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/master-resource-service/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/project-sow-service/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/reporting-integration-service/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/resource-allocation-service/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/user-mgmt-service/pom.xml clean package -DskipTests \
+ && mvn -f rma_microservices/api-gateway/pom.xml clean package -DskipTests
+
+# ================================
+# Stage 2: Run DB + Services
+# ================================
+FROM postgres:15-bullseye
+
+# Install OpenJDK 17
+RUN apt-get update && apt-get install -y openjdk-17-jdk netcat && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy all jars
+COPY --from=builder /app/rma_microservices/eureka-server/target/*.jar eureka-server.jar
+COPY --from=builder /app/rma_microservices/master-resource-service/target/*.jar master-resource-service.jar
+COPY --from=builder /app/rma_microservices/project-sow-service/target/*.jar project-sow-service.jar
+COPY --from=builder /app/rma_microservices/reporting-integration-service/target/*.jar reporting-integration-service.jar
+COPY --from=builder /app/rma_microservices/resource-allocation-service/target/*.jar resource-allocation-service.jar
+COPY --from=builder /app/rma_microservices/user-mgmt-service/target/*.jar user-mgmt-service.jar
+COPY --from=builder /app/rma_microservices/api-gateway/target/*.jar api-gateway.jar
+
+# Init DB scripts
+COPY init-db.sql /docker-entrypoint-initdb.d/
+
+# Copy run script
+COPY run-services.sh .
+RUN chmod +x run-services.sh
+
+# Default entrypoint from postgres will start DB
+ENTRYPOINT ["./run-services.sh"]

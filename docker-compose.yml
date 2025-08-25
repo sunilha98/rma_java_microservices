@@ -1,0 +1,114 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: rma-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro  # Mount your init script
+    networks:
+      - rma-network
+      
+  eureka-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+
+  user-mgmt-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: user-mgmt-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+
+  master-resource-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: master-resource-service
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+
+  project-sow-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: project-sow-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+
+  resource-allocation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: resource-allocation-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+      
+  reporting-integration-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: reporting-integration-service
+    ports:
+      - "8084:8084"
+    depends_on:
+      - postgres
+    networks:
+      - rma-network
+      
+  # New service for the React frontend
+  rma_react_frontend:
+    build:
+      context: ./rma_react_frontend  # Path to the directory with the React Dockerfile
+    ports:
+      - "3000:80"                  # Map host port 3000 to container port 80
+    networks:
+      - rma-network
+
+volumes:
+  postgres_data:
+
+networks:
+  rma-network:
+    driver: bridge
