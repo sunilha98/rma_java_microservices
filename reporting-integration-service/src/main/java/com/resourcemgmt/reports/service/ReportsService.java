@@ -1,14 +1,10 @@
 package com.resourcemgmt.reports.service;
 
+import com.resourcemgmt.reports.feignclients.*;
 import com.resourcemgmt.reports.reports.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,39 +14,25 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReportsService {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final AllocationsClient allocationsClient;
+    private final LessonsClient lessonsClient;
+    private final ProjectsClient projectsClient;
+    private final ProjectStatusClient projectStatusClient;
+    private final SowsClient sowsClient;
 
     public List<ProjectReportDTO> getInFlightProjects(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/IN_FLIGHT";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        return response.getBody();
+        return projectsClient.getProjectsByStatus("Bearer " + token, "IN_FLIGHT").getBody();
     }
 
     public List<ProjectReportDTO> getProposedProjects(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/PROPOSED";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        return response.getBody();
+        return projectsClient.getProjectsByStatus("Bearer " + token, "PROPOSED").getBody();
     }
 
     public List<SpendTrackingDTO> getSpendTrackingReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/status/spend-tracking";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List> response = projectsClient.getSpendTrackingReport("Bearer " + token);
         List<Map<String, Object>> resList = response.getBody();
 
         List<SpendTrackingDTO> result = new ArrayList<>();
@@ -63,23 +45,13 @@ public class ReportsService {
 
     public List<RiskIssueDTO> getRisksAndIssuesReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/project-status/getRisksAndIssuesReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List<RiskIssueDTO>> response = projectStatusClient.getRisksAndIssuesReport("Bearer " + token);
         List<RiskIssueDTO> resList = response.getBody();
         return resList;
     }
 
     public List<ResourceAllocationDTO> getResourceAllocationReport(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/allocations/getResourceAllocationReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
+        ResponseEntity<List> response = allocationsClient.getAllocationsReports("Bearer " + token);
         List<ResourceAllocationDTO> resList = response.getBody();
 
         return resList;
@@ -87,13 +59,7 @@ public class ReportsService {
 
 
     public List<BenchResourceDTO> getBenchTrackingReport(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/allocations/getBenchTrackingReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<BenchResourceDTO> resList = response.getBody();
+        List<BenchResourceDTO> resList = allocationsClient.getBenchTrackingReports("Bearer " + token).getBody();
 
         return resList;
     }
@@ -101,71 +67,33 @@ public class ReportsService {
 
     public List<ForecastingDTO> getForecastingReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/sows/getForecastingReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<ForecastingDTO> resList = response.getBody();
+        List<ForecastingDTO> resList = sowsClient.getForecastingReports("Bearer " + token).getBody();
 
         return resList;
     }
 
     public List<FinancialMetricDTO> getFinancialMetricsReport(String token) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/getFinancialMetricsReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<FinancialMetricDTO> resList = response.getBody();
+        List<FinancialMetricDTO> resList = projectsClient.getFinancialMetricsReport("Bearer " + token).getBody();
 
         return resList;
     }
 
     public List<GovernanceDTO> getGovernanceReport(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/sows/getGovernanceReport";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<GovernanceDTO> resList = response.getBody();
+        List<GovernanceDTO> resList = sowsClient.getGovernanceReports("Bearer " + token).getBody();
 
         return resList;
     }
 
     public List<PortfolioDTO> getPortfolioDashboard(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/projects/getPortfolioReports";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<PortfolioDTO> resList = response.getBody();
+        List<PortfolioDTO> resList = projectsClient.getPortfolioReports("Bearer " + token).getBody();
 
         return resList;
     }
 
-    //	@CircuitBreaker(name = "lessonsService", fallbackMethod = "getLessonsFallback")
     public List<LessonLearnedDTO> getLessonsLearnedRepository(String token) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(token);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-        String url = "http://localhost:8080/api/lessons/getLessonsLearnedReports";
-        ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
-        List<LessonLearnedDTO> resList = response.getBody();
-
-        return resList;
+        String bearerToken = "Bearer " + token;
+        return lessonsClient.getLessonsLearnedReports(bearerToken);
     }
 
-//	// Fallback method
-//	public List<LessonLearnedDTO> getLessonsFallback(String token, Throwable ex) {
-//		System.err.println("Fallback triggered due to: " + ex.getMessage());
-//		// Return cached response OR empty list
-//		return Collections.emptyList();
-//	}
 }

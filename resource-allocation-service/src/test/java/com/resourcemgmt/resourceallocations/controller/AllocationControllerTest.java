@@ -48,8 +48,8 @@ class AllocationControllerTest {
     @Mock
     private TitleRepository titleRepository;
 
-@Mock
-private RestTemplate restTemplate;
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     private AllocationController allocationController;
@@ -85,64 +85,6 @@ private RestTemplate restTemplate;
         allocationDTO.setEndDate(LocalDateTime.now().plusMonths(6));
     }
 
-    /*@Test
-    void createAllocation_Success() {
-        // Arrange
-        AllocationDTO allocationDTO = new AllocationDTO();
-        allocationDTO.setProjectId(1L);
-        allocationDTO.setRole("Developer");
-        allocationDTO.setResourceId(1L);
-        allocationDTO.setAllocationPercent(50);
-        allocationDTO.setStartDate(LocalDateTime.now());
-        allocationDTO.setEndDate(LocalDateTime.now().plusMonths(6));
-
-        Resource resource = new Resource();
-        resource.setId(1L);
-        resource.setFirstName("John");
-        resource.setLastName("Doe");
-        resource.setAllocationPercentage(0);
-        resource.setBenchStatus(Resource.BenchStatus.AVAILABLE);
-
-        Title title = new Title();
-        title.setName("Developer");
-
-        Allocation expectedAllocation = new Allocation();
-        expectedAllocation.setProjectId(1L);
-        expectedAllocation.setResource(resource);
-        expectedAllocation.setTitle(title);
-        expectedAllocation.setAllocationPercentage(50);
-
-        // Mock repository responses
-        when(resourceRepository.findById(1L)).thenReturn(Optional.of(resource));
-        when(titleRepository.findByName("Developer")).thenReturn(title);
-        when(allocationRepository.save(any(Allocation.class))).thenReturn(expectedAllocation);
-        when(resourceRepository.saveAndFlush(any(Resource.class))).thenReturn(resource);
-
-        // Mock REST template response
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth("mock-token");
-        when(restTemplate.exchange(
-                        eq("http://localhost:8080/api/projects/1"),
-                        eq(HttpMethod.GET),
-                        any(HttpEntity.class),
-                        eq(Map.class))
-                .thenReturn(ResponseEntity.ok(Collections.singletonMap("name", "Test Project")));
-
-        // Act
-        ResponseEntity<Allocation> response = allocationController.createAllocation(allocationDTO, "mock-token");
-
-        // Assert
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-        assertEquals(1L, response.getBody().getProjectId());
-        assertEquals(50, response.getBody().getAllocationPercentage());
-
-        // Verify interactions
-        verify(resourceRepository).findById(1L);
-        verify(titleRepository).findByName("Developer");
-        verify(allocationRepository).save(any(Allocation.class));
-        verify(resourceRepository).saveAndFlush(any(Resource.class));
-    }*/
 
     @Test
     void getAllAllocations_ReturnsAllAllocations() {

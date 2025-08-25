@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ForecastingDTO {
-	private String role;
-	private String skill;
-	private int futureDemand;
-	private int availableResources;
+    private String role;
+    private String skill;
+    private int futureDemand;
+    private int availableResources;
 }

@@ -1,0 +1,1177 @@
+{
+  "info": {
+    "name": "Unified Microservices API",
+    "description": "A complete Postman collection for all microservices: master-resource, project-sow, reporting-integration, resource-allocation, and user-mgmt.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "master-resource-service (8081)",
+      "item": [
+        {
+          "name": "GET /activity/recent",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/activity/recent",
+              "host": ["{{base_url_8081}}"],
+              "path": ["activity", "recent"]
+            }
+          }
+        },
+        {
+          "name": "GET /clients/{clientId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/clients/:clientId",
+              "host": ["{{base_url_8081}}"],
+              "path": ["clients", ":clientId"],
+              "variable": [
+                {
+                  "key": "clientId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /clients/getByName/{name}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/clients/getByName/:name",
+              "host": ["{{base_url_8081}}"],
+              "path": ["clients", "getByName", ":name"],
+              "variable": [
+                {
+                  "key": "name",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /dashboard/metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/dashboard/metrics",
+              "host": ["{{base_url_8081}}"],
+              "path": ["dashboard", "metrics"]
+            }
+          }
+        },
+        {
+          "name": "GET /locations/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/locations/:id",
+              "host": ["{{base_url_8081}}"],
+              "path": ["locations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /locations/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Location Name\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8081}}/locations/:id",
+              "host": ["{{base_url_8081}}"],
+              "path": ["locations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /locations/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/locations/:id",
+              "host": ["{{base_url_8081}}"],
+              "path": ["locations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /shifts/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8081}}/shifts/:id",
+              "host": ["{{base_url_8081}}"],
+              "path": ["shifts", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "project-sow-service (8082)",
+      "item": [
+        {
+          "name": "GET /lessons/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/:id",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /lessons/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Lesson Title\",\n    \"description\": \"Updated description of the lesson learned.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/:id",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /lessons/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/:id",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /lessons/search",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/search",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", "search"]
+            }
+          }
+        },
+        {
+          "name": "GET /lessons/project/{projectId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/project/:projectId",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", "project", ":projectId"],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /lessons/getLessonsLearnedReports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/lessons/getLessonsLearnedReports",
+              "host": ["{{base_url_8082}}"],
+              "path": ["lessons", "getLessonsLearnedReports"]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/:id",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /projects/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Project Name\",\n    \"status\": \"IN_PROGRESS\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8082}}/projects/:id",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/countActiveProjects",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/countActiveProjects",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", "countActiveProjects"]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/status/{status}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/status/:status",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", "status", ":status"],
+              "variable": [
+                {
+                  "key": "status",
+                  "value": "ACTIVE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/spend-tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/spend-tracking",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", "spend-tracking"]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/getPortfolioReports",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/getPortfolioReports",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", "getPortfolioReports"]
+            }
+          }
+        },
+        {
+          "name": "GET /projects/getFinancialMetricsReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/projects/getFinancialMetricsReport",
+              "host": ["{{base_url_8082}}"],
+              "path": ["projects", "getFinancialMetricsReport"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /project-status/{projectId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/project-status/:projectId",
+              "host": ["{{base_url_8082}}"],
+              "path": ["project-status", ":projectId"],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /project-status/getRisksAndIssuesReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/project-status/getRisksAndIssuesReport",
+              "host": ["{{base_url_8082}}"],
+              "path": ["project-status", "getRisksAndIssuesReport"]
+            }
+          }
+        },
+        {
+          "name": "POST /sows/upload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url_8082}}/sows/upload",
+              "host": ["{{base_url_8082}}"],
+              "path": ["sows", "upload"]
+            }
+          }
+        },
+        {
+          "name": "GET /sows/getGovernanceReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/sows/getGovernanceReport",
+              "host": ["{{base_url_8082}}"],
+              "path": ["sows", "getGovernanceReport"]
+            }
+          }
+        },
+        {
+          "name": "GET /sows/getForecastingReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8082}}/sows/getForecastingReport",
+              "host": ["{{base_url_8082}}"],
+              "path": ["sows", "getForecastingReport"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "reporting-integration-service (8083)",
+      "item": [
+        {
+          "name": "GET /reports/spend-tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/spend-tracking",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "spend-tracking"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/in-flight",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/in-flight",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "in-flight"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/proposed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/proposed",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "proposed"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/risks-issues",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/risks-issues",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "risks-issues"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/resource-allocation",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/resource-allocation",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "resource-allocation"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/bench-tracking",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/bench-tracking",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "bench-tracking"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/forecasting",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/forecasting",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "forecasting"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/financial-metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/financial-metrics",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "financial-metrics"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/governance",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/governance",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "governance"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/portfolio",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/portfolio",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "portfolio"]
+            }
+          }
+        },
+        {
+          "name": "GET /reports/lessons-learned",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8083}}/reports/lessons-learned",
+              "host": ["{{base_url_8083}}"],
+              "path": ["reports", "lessons-learned"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "resource-allocation-service (8084)",
+      "item": [
+        {
+          "name": "GET /allocations/project/{projectId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/allocations/project/:projectId",
+              "host": ["{{base_url_8084}}"],
+              "path": ["allocations", "project", ":projectId"],
+              "variable": [
+                {
+                  "key": "projectId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/resource/{resourceId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/allocations/resource/:resourceId",
+              "host": ["{{base_url_8084}}"],
+              "path": ["allocations", "resource", ":resourceId"],
+              "variable": [
+                {
+                  "key": "resourceId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /allocations/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startDate\": \"2023-10-27\",\n    \"endDate\": \"2023-12-15\",\n    \"allocationPercentage\": 75\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8084}}/allocations/:id",
+              "host": ["{{base_url_8084}}"],
+              "path": ["allocations", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/getResourceAllocationReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/allocations/getResourceAllocationReport",
+              "host": ["{{base_url_8084}}"],
+              "path": ["allocations", "getResourceAllocationReport"]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/getBenchTrackingReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/allocations/getBenchTrackingReport",
+              "host": ["{{base_url_8084}}"],
+              "path": ["allocations", "getBenchTrackingReport"]
+            }
+          }
+        },
+        {
+          "name": "PUT /fulfillment-requests/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"FULFILLED\",\n    \"assignedResourceId\": 123\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8084}}/fulfillment-requests/:id",
+              "host": ["{{base_url_8084}}"],
+              "path": ["fulfillment-requests", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/bench",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/bench",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", "bench"]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/:id",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /resources/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Updated\",\n    \"title\": \"Senior Developer\",\n    \"skills\": [\"Java\", \"Spring Boot\", \"AWS\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8084}}/resources/:id",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/skills",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/skills",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", "skills"]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countActiveResources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/countActiveResources",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", "countActiveResources"]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countBenchResources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/countBenchResources",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", "countBenchResources"]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countByTitleName",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8084}}/resources/countByTitleName",
+              "host": ["{{base_url_8084}}"],
+              "path": ["resources", "countByTitleName"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "user-mgmt-service (8085)",
+      "item": [
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"your_username\",\n    \"password\": \"your_password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8085}}/auth/login",
+              "host": ["{{base_url_8085}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8085}}/auth/logout",
+              "host": ["{{base_url_8085}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "GET /users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8085}}/users/:id",
+              "host": ["{{base_url_8085}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /users/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Updated\",\n    \"email\": \"jane.updated@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url_8085}}/users/:id",
+              "host": ["{{base_url_8085}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE /users/{id}",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url_8085}}/users/:id",
+              "host": ["{{base_url_8085}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_8081",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "base_url_8082",
+      "value": "http://localhost:8082",
+      "type": "string"
+    },
+    {
+      "key": "base_url_8083",
+      "value": "http://localhost:8083",
+      "type": "string"
+    },
+    {
+      "key": "base_url_8084",
+      "value": "http://localhost:8084",
+      "type": "string"
+    },
+    {
+      "key": "base_url_8085",
+      "value": "http://localhost:8085",
+      "type": "string"
+    }
+  ]
+}

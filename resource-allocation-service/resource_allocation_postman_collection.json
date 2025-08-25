@@ -1,0 +1,544 @@
+{
+  "info": {
+    "name": "Resource Allocation Service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AllocationController",
+      "item": [
+        {
+          "name": "GET /allocations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/project/{projectId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations/project/{projectId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations",
+                "project",
+                "{projectId}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/resource/{resourceId}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations/resource/{resourceId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations",
+                "resource",
+                "{resourceId}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /allocations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT /allocations/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations",
+                "{id}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/getResourceAllocationReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations/getResourceAllocationReport",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations",
+                "getResourceAllocationReport"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /allocations/getBenchTrackingReport",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/allocations/getBenchTrackingReport",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "allocations",
+                "getBenchTrackingReport"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "FulfillmentRequestController",
+      "item": [
+        {
+          "name": "GET /fulfillment-requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fulfillment-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fulfillment-requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT /fulfillment-requests/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fulfillment-requests/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fulfillment-requests",
+                "{id}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /fulfillment-requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/fulfillment-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "fulfillment-requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ReleaseRequestController",
+      "item": [
+        {
+          "name": "POST /release-requests",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/release-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "release-requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /release-requests",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/release-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "release-requests"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "ResourceController",
+      "item": [
+        {
+          "name": "GET /resources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/bench",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/bench",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "bench"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/{id}",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "{id}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /resources",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "PUT /resources/{id}",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "{id}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sampleField\": \"value\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /resources/skills",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/skills",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "skills"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countActiveResources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/countActiveResources",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "countActiveResources"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countBenchResources",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/countBenchResources",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "countBenchResources"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /resources/countByTitleName",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/resources/countByTitleName",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "resources",
+                "countByTitleName"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "TitlesController",
+      "item": [
+        {
+          "name": "GET /titles",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/titles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "titles"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

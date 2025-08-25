@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BenchResourceDTO {
-	private Long resourceId;
-	private String firstName;
-	private String lastName;
-	private String title;
-	private String skills;
-	private boolean isUnderutilized;
+    private Long resourceId;
+    private String firstName;
+    private String lastName;
+    private String title;
+    private String skills;
+    private boolean isUnderutilized;
 }
