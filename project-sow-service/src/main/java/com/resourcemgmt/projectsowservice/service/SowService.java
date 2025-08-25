@@ -84,7 +84,7 @@ public class SowService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/clients";
+        String url = "http://api-gateway:8080/api/clients";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<Map<String, Object>> allClients = response.getBody();
 
@@ -106,7 +106,7 @@ public class SowService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/resources/countByTitleName";
+        String url = "http://api-gateway:8080/api/resources/countByTitleName";
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         Map<String, Long> resMap = response.getBody();
 

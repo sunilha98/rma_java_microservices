@@ -11,9 +11,9 @@ spring:
     clean-disabled: true
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/usr_mgmt_db
+    url: jdbc:postgresql://rma-postgres:5432/postgres
     username: postgres
-    password: root
+    password: postgres
     driver-class-name: org.postgresql.Driver
   
   jpa:
@@ -24,6 +24,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        default_schema: usr_mgmt_db
   
   jackson:
     default-property-inclusion: NON_NULL
@@ -46,7 +47,7 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/ # Eureka server URL
+      defaultZone: http://eureka-server:8761/eureka
     register-with-eureka: true
     fetch-registry: true
   instance:

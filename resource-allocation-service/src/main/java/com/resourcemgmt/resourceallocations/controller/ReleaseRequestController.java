@@ -36,7 +36,7 @@ public class ReleaseRequestController {
 		headers.setBearerAuth(token);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		String url = "http://localhost:8080/api/projects/"+ saved.getProjectId();
+		String url = "http://api-gateway:8080/api/projects/"+ saved.getProjectId();
 		ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
 		String projectName = response.getBody().get("name").toString();
 
@@ -59,7 +59,7 @@ public class ReleaseRequestController {
 			headers.setBearerAuth(token);
 			HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-			String url = "http://localhost:8080/api/projects/"+ releaseRequest.getProjectId();
+			String url = "http://api-gateway:8080/api/projects/"+ releaseRequest.getProjectId();
 			ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
 			String projectName = response.getBody().get("name").toString();
 

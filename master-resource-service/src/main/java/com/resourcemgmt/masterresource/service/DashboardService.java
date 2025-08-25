@@ -21,15 +21,15 @@ public class DashboardService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/countActiveProjects";
+        String url = "http://api-gateway:8080/api/projects/countActiveProjects";
         ResponseEntity<Long> response = restTemplate.exchange(url, HttpMethod.GET, entity, Long.class);
         Long activeProjects = response.getBody();
 
-        String url2 = "http://localhost:8080/api/resources/countActiveResources";
+        String url2 = "http://api-gateway:8080/api/resources/countActiveResources";
         ResponseEntity<Long> response2 = restTemplate.exchange(url2, HttpMethod.GET, entity, Long.class);
         Long totalResources = response2.getBody();
 
-        String url3 = "http://localhost:8080/api/resources/countBenchResources";
+        String url3 = "http://api-gateway:8080/api/resources/countBenchResources";
         ResponseEntity<Long> response3 = restTemplate.exchange(url3, HttpMethod.GET, entity, Long.class);
         Long benchResources = response3.getBody();
 

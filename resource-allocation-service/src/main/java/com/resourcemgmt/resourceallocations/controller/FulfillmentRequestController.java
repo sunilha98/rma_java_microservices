@@ -50,15 +50,15 @@ public class FulfillmentRequestController {
 
         List<FulfillmentRequestDTO> dtos = requests.stream().map(req -> {
 
-            String url = "http://localhost:8080/api/locations/" + req.getLocationId();
+            String url = "http://api-gateway:8080/api/locations/" + req.getLocationId();
             ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
             String location = response.getBody().get("name").toString();
 
-            String url2 = "http://localhost:8080/api/shifts/" + req.getShiftId();
+            String url2 = "http://api-gateway:8080/api/shifts/" + req.getShiftId();
             ResponseEntity<Map> response2 = restTemplate.exchange(url2, HttpMethod.GET, entity, Map.class);
             String shift = response2.getBody().get("name").toString();
 
-            String url3 = "http://localhost:8080/api/projects/" + req.getProjectId();
+            String url3 = "http://api-gateway:8080/api/projects/" + req.getProjectId();
             ResponseEntity<Map> response3 = restTemplate.exchange(url3, HttpMethod.GET, entity, Map.class);
             String projectName = response3.getBody().get("name").toString();
 
@@ -101,7 +101,7 @@ public class FulfillmentRequestController {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/" + request.getProjectId();
+        String url = "http://api-gateway:8080/api/projects/" + request.getProjectId();
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         String projectName = response.getBody().get("name").toString();
 
@@ -137,7 +137,7 @@ public class FulfillmentRequestController {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/" + request.getProjectId();
+        String url = "http://api-gateway:8080/api/projects/" + request.getProjectId();
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         String projectName = response.getBody().get("name").toString();
 

@@ -30,7 +30,7 @@ public class ActivityLogService {
 		log.setDetails(details);
 		log.setTimestamp(LocalDateTime.now());
 
-		String url = "http://localhost:8080/api/activity";
+		String url = "http://api-gateway:8080/api/activity";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.setBearerAuth(TOKEN);

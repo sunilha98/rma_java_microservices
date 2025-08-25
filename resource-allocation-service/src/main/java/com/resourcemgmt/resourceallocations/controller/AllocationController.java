@@ -101,7 +101,7 @@ public class AllocationController {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/" + allocationDTO.getProjectId();
+        String url = "http://api-gateway:8080/api/projects/" + allocationDTO.getProjectId();
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         String projectName = response.getBody().get("name").toString();
 
@@ -134,7 +134,7 @@ public class AllocationController {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects";
+        String url = "http://api-gateway:8080/api/projects";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<Map<String, Object>> resList = response.getBody();
         Map<Long, String> projectMap = resList.stream()

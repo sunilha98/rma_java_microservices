@@ -27,7 +27,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/status/IN_FLIGHT";
+        String url = "http://api-gateway:8080/api/projects/status/IN_FLIGHT";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         return response.getBody();
     }
@@ -38,7 +38,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/status/PROPOSED";
+        String url = "http://api-gateway:8080/api/projects/status/PROPOSED";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         return response.getBody();
     }
@@ -49,7 +49,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/status/spend-tracking";
+        String url = "http://api-gateway:8080/api/projects/status/spend-tracking";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<Map<String, Object>> resList = response.getBody();
 
@@ -67,7 +67,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/project-status/getRisksAndIssuesReport";
+        String url = "http://api-gateway:8080/api/project-status/getRisksAndIssuesReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<RiskIssueDTO> resList = response.getBody();
         return resList;
@@ -78,7 +78,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/allocations/getResourceAllocationReport";
+        String url = "http://api-gateway:8080/api/allocations/getResourceAllocationReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<ResourceAllocationDTO> resList = response.getBody();
 
@@ -91,7 +91,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/allocations/getBenchTrackingReport";
+        String url = "http://api-gateway:8080/api/allocations/getBenchTrackingReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<BenchResourceDTO> resList = response.getBody();
 
@@ -105,7 +105,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/sows/getForecastingReport";
+        String url = "http://api-gateway:8080/api/sows/getForecastingReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<ForecastingDTO> resList = response.getBody();
 
@@ -118,7 +118,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/getFinancialMetricsReport";
+        String url = "http://api-gateway:8080/api/projects/getFinancialMetricsReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<FinancialMetricDTO> resList = response.getBody();
 
@@ -130,7 +130,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/sows/getGovernanceReport";
+        String url = "http://api-gateway:8080/api/sows/getGovernanceReport";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<GovernanceDTO> resList = response.getBody();
 
@@ -142,7 +142,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/projects/getPortfolioReports";
+        String url = "http://api-gateway:8080/api/projects/getPortfolioReports";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<PortfolioDTO> resList = response.getBody();
 
@@ -155,7 +155,7 @@ public class ReportsService {
         headers.setBearerAuth(token);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-        String url = "http://localhost:8080/api/lessons/getLessonsLearnedReports";
+        String url = "http://api-gateway:8080/api/lessons/getLessonsLearnedReports";
         ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
         List<LessonLearnedDTO> resList = response.getBody();
 

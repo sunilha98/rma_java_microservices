@@ -49,7 +49,7 @@ public class ProjectController {
 		headers.setBearerAuth(token);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		String url = "http://localhost:8080/api/clients/"+project.getClientId();
+		String url = "http://api-gateway:8080/api/clients/"+project.getClientId();
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         String clientName= response.getBody().get("name").toString();
 		
@@ -111,7 +111,7 @@ public class ProjectController {
 		headers.setBearerAuth(token);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		String url = "http://localhost:8080/api/clients";
+		String url = "http://api-gateway:8080/api/clients";
 		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
 		List<Map<String, Object>> allClients = response.getBody();
 
@@ -138,7 +138,7 @@ public class ProjectController {
 		headers.setBearerAuth(token);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		String url = "http://localhost:8080/api/clients";
+		String url = "http://api-gateway:8080/api/clients";
 		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
 		List<Map<String, Object>> allClients = response.getBody();
 
@@ -176,7 +176,7 @@ public class ProjectController {
 		headers.setBearerAuth(token);
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-		String url = "http://localhost:8080/api/clients";
+		String url = "http://api-gateway:8080/api/clients";
 		ResponseEntity<List> response = restTemplate.exchange(url, HttpMethod.GET, entity, List.class);
 		List<Map<String, Object>> allClients = response.getBody();
 

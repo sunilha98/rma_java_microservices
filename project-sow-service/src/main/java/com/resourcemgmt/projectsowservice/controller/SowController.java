@@ -49,7 +49,7 @@ public class SowController {
 		HttpEntity<Void> entity = new HttpEntity<>(headers);
 		ActivityLogService.TOKEN = token;
 
-		String url = "http://localhost:8080/api/clients/getByName/"+clientName;
+		String url = "http://api-gateway:8080/api/clients/getByName/"+clientName;
         ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
         Long clientId= Long.parseLong(response.getBody().get("id").toString());
 
